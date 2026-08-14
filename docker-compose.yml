@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    container_name: ai_career_platform
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      - SECRET_KEY=production_secret_key_change_me
+      - JWT_SECRET_KEY=production_jwt_secret_key_change_me_32bytes
+      - LOG_LEVEL=INFO
+      - UPLOAD_FOLDER=uploads/resumes
+    volumes:
+      - ./uploads:/app/uploads
+      - ./instance:/app/instance

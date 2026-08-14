@@ -1,0 +1,149 @@
+# ==========================================================
+# AI Career Intelligence Platform
+# Master Git Ignore Rules
+# ==========================================================
+
+# -------------------------
+# Sensitive Files & Env
+# -------------------------
+.env
+.env.*
+*.env
+!.env.example
+
+# -------------------------
+# Python Compilation & Bytecode
+# -------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# -------------------------
+# Virtual Environments
+# -------------------------
+venv/
+env/
+ENV/
+.venv/
+env.bak/
+venv.bak/
+
+# -------------------------
+# Databases & Local Instances
+# -------------------------
+*.db
+*.sqlite
+*.sqlite3
+instance/*.db
+instance/*.sqlite
+
+# -------------------------
+# Runtime Logs
+# -------------------------
+logs/*
+!logs/.gitkeep
+*.log
+
+# -------------------------
+# Test & Linting Caches
+# -------------------------
+.cache/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.tox/
+.hypothesis/
+
+# -------------------------
+# Jupyter Notebooks
+# -------------------------
+.ipynb_checkpoints/
+
+# -------------------------
+# ML Models, Vector Indices & Caches
+# -------------------------
+*.pkl
+*.joblib
+*.h5
+*.onnx
+*.pt
+*.pth
+*.bin
+*.index
+
+storage/*
+!storage/.gitkeep
+!storage/*/
+!storage/*/.gitkeep
+
+cache/*
+!cache/.gitkeep
+!cache/*/
+!cache/*/.gitkeep
+
+# -------------------------
+# Uploads, Exports & Backups
+# -------------------------
+uploads/*
+!uploads/.gitkeep
+!uploads/*/
+!uploads/*/.gitkeep
+uploads/resumes/*
+!uploads/resumes/.gitkeep
+uploads/certificates/*
+!uploads/certificates/.gitkeep
+uploads/job_descriptions/*
+!uploads/job_descriptions/.gitkeep
+uploads/temp/*
+!uploads/temp/.gitkeep
+
+exports/*
+!exports/.gitkeep
+
+backups/*
+!backups/.gitkeep
+
+# -------------------------
+# IDEs & Code Editors
+# -------------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+*.sublime-project
+*.sublime-workspace
+
+# -------------------------
+# Operating System Artifacts
+# -------------------------
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# -------------------------
+# Build & Distribution
+# -------------------------
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg

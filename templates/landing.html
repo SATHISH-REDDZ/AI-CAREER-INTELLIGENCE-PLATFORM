@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Career Intelligence Platform — AI Resume Analysis, ATS Scoring & Career Guidance</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome 6 Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-main: #212121;
+            --bg-sidebar: #171717;
+            --bg-input: #2f2f2f;
+            --bg-hover: #2f2f2f;
+            --border-subtle: rgba(255, 255, 255, 0.1);
+            --text-primary: #ececec;
+            --text-secondary: #b4b4b4;
+            --text-subtle: #8e8e8e;
+
+            /* Brand Colors for All AI Models */
+            --brand-chatgpt: #10a37f;
+            --brand-gemini: #a855f7;
+            --brand-banana: #eab308;
+            --brand-claude: #d97706;
+            --brand-perplexity: #06b6d4;
+            --brand-meta: #3b82f6;
+
+            --current-brand: var(--brand-chatgpt);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* 1. SIDEBAR */
+        aside, .sidebar {
+            width: 260px;
+            background-color: var(--bg-sidebar);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 0.75rem;
+            flex-shrink: 0;
+            z-index: 100;
+            user-select: none;
+        }
+
+        .sidebar-nav-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.25rem 0.5rem 0.5rem;
+        }
+
+        .chatgpt-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .sidebar-actions {
+            display: flex;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .icon-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 0.4rem;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.15s, color 0.15s;
+        }
+
+        .icon-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
+
+        .btn-new-chat {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: transparent;
+            border: 1px solid var(--border-subtle);
+            color: var(--text-primary);
+            padding: 0.65rem 0.85rem;
+            border-radius: 8px;
+            font-size: 0.88rem;
+            font-weight: 500;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.15s;
+            margin-bottom: 0.5rem;
+        }
+
+        .btn-new-chat:hover { background: var(--bg-hover); }
+
+        .chat-history { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 0.2rem; }
+        .history-group-title { font-size: 0.72rem; font-weight: 600; color: var(--text-subtle); padding: 0.75rem 0.6rem 0.25rem; }
+
+        .history-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.55rem 0.6rem;
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.15s;
+        }
+
+        .history-item:hover, .history-item.active { background: var(--bg-hover); }
+
+        .item-label { display: flex; align-items: center; gap: 0.6rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .item-label i { font-size: 0.85rem; color: var(--text-secondary); flex-shrink: 0; }
+        .item-dots { color: var(--text-subtle); font-size: 0.85rem; padding: 0.2rem 0.4rem; border-radius: 4px; opacity: 0; transition: opacity 0.15s; }
+        .history-item:hover .item-dots { opacity: 1; }
+
+        .sidebar-footer { border-top: 1px solid var(--border-subtle); padding-top: 0.5rem; }
+        .profile-bar { display: flex; align-items: center; justify-content: space-between; padding: 0.5rem; border-radius: 8px; cursor: pointer; transition: background 0.15s; }
+        .profile-bar:hover { background: var(--bg-hover); }
+
+        .profile-meta { display: flex; align-items: center; gap: 0.65rem; }
+        .avatar-box { width: 32px; height: 32px; border-radius: 50%; background: #ab68ff; color: white; font-size: 0.8rem; font-weight: 600; display: flex; align-items: center; justify-content: center; }
+
+        .btn-google-login {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: white;
+            color: #3c4043;
+            border: 1px solid #dadce0;
+            padding: 0.45rem 0.85rem;
+            border-radius: 9999px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: box-shadow 0.2s, background 0.2s;
+            margin-top: 0.5rem;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .btn-google-login:hover { background: #f8f9fa; box-shadow: 0 1px 3px rgba(60,64,67,0.3); }
+        .google-svg { width: 16px; height: 16px; }
+
+        /* 2. MAIN WORKSPACE */
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--bg-main);
+            height: 100vh;
+            position: relative;
+        }
+
+        .top-header { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1.25rem; position: relative; }
+        .model-picker { display: flex; align-items: center; gap: 0.5rem; font-size: 1.15rem; font-weight: 600; color: var(--text-primary); cursor: pointer; padding: 0.4rem 0.75rem; border-radius: 10px; transition: background 0.15s; user-select: none; }
+        .model-picker:hover { background: var(--bg-hover); }
+
+        .model-menu {
+            display: none; position: absolute; top: 3.2rem; left: 1.25rem; background: #252525; border: 1px solid var(--border-subtle); border-radius: 16px; padding: 0.5rem; width: 270px; z-index: 300; box-shadow: 0 20px 45px rgba(0,0,0,0.7);
+        }
+
+        .model-option { display: flex; align-items: center; gap: 0.75rem; padding: 0.65rem 0.75rem; border-radius: 10px; cursor: pointer; font-size: 0.88rem; font-weight: 500; transition: background 0.15s; }
+        .model-option:hover { background: #333; }
+        .model-option.active { background: rgba(255, 255, 255, 0.12); color: var(--text-primary); font-weight: 600; }
+
+        .top-right-actions { display: flex; align-items: center; gap: 0.75rem; }
+        .btn-share-header { display: flex; align-items: center; gap: 0.5rem; background: transparent; border: 1px solid var(--border-subtle); color: var(--text-primary); padding: 0.45rem 0.85rem; border-radius: 9999px; font-size: 0.85rem; font-weight: 500; cursor: pointer; transition: background 0.15s; }
+        .btn-share-header:hover { background: var(--bg-hover); }
+
+        .chat-viewport { flex: 1; display: flex; flex-direction: column; max-width: 800px; margin: 0 auto; width: 100%; padding: 0 1.25rem; overflow-y: auto; }
+        .hero-view { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding-bottom: 3rem; }
+        .gpt-hero-icon { width: 52px; height: 52px; border-radius: 50%; background: var(--text-primary); color: var(--bg-main); display: flex; align-items: center; justify-content: center; font-size: 1.6rem; margin-bottom: 1.25rem; transition: background 0.3s; }
+        .hero-title { font-size: 1.85rem; font-weight: 600; margin-bottom: 2rem; letter-spacing: -0.02em; }
+
+        .message-stream { display: none; flex-direction: column; gap: 1.75rem; padding: 1.5rem 0 2rem; }
+        .message-row { display: flex; gap: 1rem; line-height: 1.6; font-size: 0.95rem; }
+        .message-row.user { justify-content: flex-end; }
+        .message-bubble { max-width: 88%; padding: 0.75rem 1.1rem; border-radius: 18px; line-height: 1.6; }
+        .message-row.user .message-bubble { background: #2f2f2f; color: var(--text-primary); }
+        .message-row.assistant .message-bubble { background: transparent; color: var(--text-primary); padding-left: 0; width: 100%; }
+
+        .assistant-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--current-brand); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; flex-shrink: 0; transition: background 0.3s; }
+
+        .msg-actions { display: flex; gap: 0.75rem; margin-top: 0.75rem; color: var(--text-subtle); font-size: 0.85rem; }
+        .msg-actions i { cursor: pointer; transition: color 0.15s; }
+        .msg-actions i:hover { color: var(--text-primary); }
+
+        .cursor-blink { display: inline-block; width: 7px; height: 15px; background: var(--current-brand); margin-left: 3px; animation: blink 0.8s infinite; }
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0; } 100% { opacity: 1; } }
+
+        /* Follow-Up Suggestion Chips Section (ChatGPT & Gemini style) */
+        .followup-suggestions-container {
+            margin-top: 1rem;
+            padding-top: 0.75rem;
+            border-top: 1px dashed var(--border-subtle);
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .followup-title {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--text-subtle);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .followup-chips-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .followup-chip {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-primary);
+            padding: 0.4rem 0.85rem;
+            border-radius: 12px;
+            font-size: 0.82rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.15s, border-color 0.15s, transform 0.15s;
+        }
+
+        .followup-chip:hover {
+            background: var(--bg-hover);
+            border-color: rgba(255, 255, 255, 0.25);
+            transform: translateY(-1px);
+        }
+
+        /* Bottom Floating Prompt Bar */
+        .bottom-container { max-width: 800px; margin: 0 auto; width: 100%; padding: 0 1.25rem 1rem; position: relative; }
+        .prompt-box { background: var(--bg-input); border: 1px solid var(--border-subtle); border-radius: 24px; padding: 0.75rem 1rem; display: flex; flex-direction: column; gap: 0.5rem; }
+        .prompt-textarea { width: 100%; background: transparent; border: none; outline: none; color: var(--text-primary); font-size: 0.95rem; resize: none; max-height: 160px; line-height: 1.5; }
+        .prompt-actions { display: flex; justify-content: space-between; align-items: center; }
+        .action-icons-left { display: flex; gap: 0.4rem; color: var(--text-secondary); }
+        .action-icons-left i { cursor: pointer; padding: 0.4rem; border-radius: 50%; transition: background 0.15s, color 0.15s; font-size: 1rem; }
+        .action-icons-left i:hover { background: #3f3f3f; color: var(--text-primary); }
+
+        .btn-send { width: 32px; height: 32px; border-radius: 50%; background: var(--text-primary); color: var(--bg-main); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: opacity 0.15s; }
+        .btn-send:hover { opacity: 0.85; }
+
+        .file-chip { display: inline-flex; align-items: center; gap: 0.5rem; background: #3a3a3a; color: var(--text-primary); padding: 0.3rem 0.75rem; border-radius: 12px; font-size: 0.8rem; margin-bottom: 0.25rem; }
+        .footer-note { text-align: center; font-size: 0.72rem; color: var(--text-subtle); margin-top: 0.5rem; }
+
+        .ats-card-embed { background: #171717; border: 1px solid var(--border-subtle); border-radius: 14px; padding: 1.25rem; margin-top: 0.75rem; }
+        .ats-val { font-size: 2.2rem; font-weight: 700; color: var(--brand-chatgpt); }
+        .tag-pill { display: inline-block; padding: 0.25rem 0.65rem; border-radius: 6px; font-size: 0.78rem; font-weight: 500; margin: 0.15rem; }
+        .tag-green { background: rgba(16, 163, 127, 0.2); color: #10a37f; }
+        .tag-red { background: rgba(244, 63, 94, 0.2); color: #f43f5e; }
+
+        /* ATTACHMENT TOOLS POPUP MENU */
+        .attachment-tools-popup {
+            display: none; position: absolute; bottom: 5.5rem; left: 1.25rem; background: #252525; border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 20px; padding: 0.75rem; width: 480px; max-width: 90vw; z-index: 500; box-shadow: 0 20px 50px rgba(0,0,0,0.8); animation: slideUp 0.2s ease;
+        }
+
+        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tool-top-pill { background: rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 0.75rem 1rem; display: flex; align-items: center; justify-content: space-between; cursor: pointer; margin-bottom: 0.5rem; transition: background 0.15s; }
+        .tool-top-pill:hover { background: rgba(255, 255, 255, 0.14); }
+        .pill-main { display: flex; align-items: center; gap: 0.75rem; font-size: 0.95rem; font-weight: 600; color: var(--text-primary); }
+        .pill-sub { font-size: 0.8rem; color: var(--text-subtle); }
+
+        .tool-menu-item { display: flex; align-items: center; justify-content: space-between; padding: 0.65rem 0.85rem; border-radius: 12px; cursor: pointer; transition: background 0.15s; }
+        .tool-menu-item:hover { background: rgba(255, 255, 255, 0.06); }
+        .tool-item-left { display: flex; align-items: center; gap: 0.85rem; }
+        .tool-icon-box { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+        .tool-item-text .tool-name { font-size: 0.9rem; font-weight: 600; color: var(--text-primary); }
+        .tool-item-text .tool-desc { font-size: 0.78rem; color: var(--text-subtle); }
+        .btn-connect { font-size: 0.8rem; color: var(--text-secondary); font-weight: 500; padding: 0.2rem 0.5rem; border-radius: 6px; }
+
+        .popup-search-bar { margin-top: 0.6rem; padding-top: 0.6rem; border-top: 1px solid var(--border-subtle); font-size: 0.8rem; color: var(--text-subtle); display: flex; align-items: center; justify-content: space-between; padding-left: 0.4rem; }
+
+        /* Share Modal */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.75); backdrop-filter: blur(8px); z-index: 1000; align-items: center; justify-content: center; }
+        .share-modal-card { background: #181818; border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 20px; padding: 1.75rem; width: 100%; max-width: 520px; position: relative; box-shadow: 0 25px 50px rgba(0,0,0,0.7); }
+        .share-modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; }
+        .share-modal-title { font-size: 1.25rem; font-weight: 700; color: var(--text-primary); }
+        .btn-close-modal { background: transparent; border: none; color: var(--text-secondary); font-size: 1.1rem; cursor: pointer; padding: 0.3rem; border-radius: 50%; }
+        .btn-close-modal:hover { color: var(--text-primary); background: rgba(255,255,255,0.1); }
+
+        .share-preview-box { background: #212121; border: 1px solid var(--border-subtle); border-radius: 16px; padding: 1.25rem; margin-bottom: 1.5rem; position: relative; }
+        .user-prompt-preview { background: #2f2f2f; color: var(--text-primary); padding: 0.5rem 0.85rem; border-radius: 14px; font-size: 0.85rem; display: inline-block; float: right; margin-bottom: 1rem; }
+        .bot-reply-preview { clear: both; font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 1.5rem; }
+        .watermark-badge { position: absolute; bottom: 0.75rem; right: 1rem; font-size: 1.1rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 0.35rem; }
+
+        .share-actions-row { display: flex; justify-content: space-around; align-items: center; margin: 1.5rem 0 1rem; }
+        .share-circle-btn { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; cursor: pointer; text-decoration: none; color: var(--text-primary); }
+        .circle-icon { width: 52px; height: 52px; border-radius: 50%; background: white; color: black; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; transition: transform 0.15s, opacity 0.15s; }
+        .share-circle-btn:hover .circle-icon { transform: scale(1.08); opacity: 0.9; }
+        .circle-label { font-size: 0.8rem; color: var(--text-secondary); font-weight: 500; }
+        .share-modal-footer { text-align: center; font-size: 0.75rem; color: var(--text-subtle); margin-top: 1rem; }
+
+        /* Context Menu */
+        .context-menu { display: none; position: absolute; background: #2b2b2b; border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 16px; padding: 0.4rem; width: 210px; z-index: 600; box-shadow: 0 15px 40px rgba(0,0,0,0.7); animation: fadeIn 0.15s ease; }
+        .menu-option { display: flex; align-items: center; justify-content: space-between; padding: 0.6rem 0.8rem; font-size: 0.88rem; font-weight: 500; color: var(--text-primary); border-radius: 10px; cursor: pointer; transition: background 0.15s; }
+        .menu-option:hover { background: rgba(255, 255, 255, 0.08); }
+        .menu-option-left { display: flex; align-items: center; gap: 0.75rem; }
+        .menu-option-left i { font-size: 0.95rem; color: var(--text-secondary); width: 18px; text-align: center; }
+        .menu-option.danger { color: #f87171; }
+        .menu-option.danger i { color: #f87171; }
+
+        /* Toast Notification */
+        .toast-notify { display: none; position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: #10a37f; color: white; padding: 0.6rem 1.25rem; border-radius: 9999px; font-size: 0.88rem; font-weight: 600; z-index: 2000; box-shadow: 0 10px 25px rgba(0,0,0,0.4); animation: popIn 0.2s ease; }
+        @keyframes popIn { from { transform: translate(-50%, 10px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <!-- 1. SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-top">
+            <div class="sidebar-nav-header">
+                <a href="/" class="chatgpt-brand">
+                    <svg id="brand-logo-svg" style="width: 24px; height: 24px; fill: currentColor;" viewBox="0 0 24 24"><path d="M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.0729zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1686a.071.071 0 0 1 .038.052v5.5826a4.5045 4.5045 0 0 1-4.4945 4.4944zm-9.6607-4.1254a4.4708 4.4708 0 0 1-.535-3.0137l.142.0852 4.783 2.7582a.7712.7712 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4997 4.4997 0 0 1-6.1408-1.6464zM2.3401 8.64a4.4708 4.4708 0 0 1 2.3655-1.9728V12.2a.7853.7853 0 0 0 .388.6766l5.8144 3.3543-2.0201 1.1686a.0757.0757 0 0 1-.071 0l-4.8303-2.7913A4.4997 4.4997 0 0 1 2.34 8.64zm16.597 3.8558l-5.838-3.3685 2.0153-1.1639a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6868a.79.79 0 0 0-.402-.6763zm2.0107-3.0231l-.1419-.0852-4.7735-2.7582a.7759.7759 0 0 0-.7854 0L9.409 9.9977V7.6653a.0757.0757 0 0 1 .0331-.0615l4.8304-2.7914a4.5045 4.5045 0 0 1 6.6802 4.8087zM8.3065 12.863l-2.02-1.1638a.0804.0804 0 0 1-.038-.052V6.0646a4.4997 4.4997 0 0 1 7.3757-3.4537l-.1419.0804-4.7783 2.7583a.7948.7948 0 0 0-.3927.6813v6.7321zm1.1458-1.6708l3.3069-1.9082 3.307 1.9082v3.8164l-3.307 1.9082-3.3069-1.9082z"/></svg>
+                    <span id="brand-name-text">ChatGPT</span>
+                </a>
+                <div class="sidebar-actions">
+                    <button class="icon-btn" title="Search"><i class="fa-solid fa-magnifying-glass"></i></button>
+                </div>
+            </div>
+
+            <button class="btn-new-chat" onclick="startNewChat()">
+                <i class="fa-regular fa-pen-to-square"></i>
+                <span>New chat</span>
+            </button>
+
+            <div class="chat-history" id="sidebar-chat-history">
+                <div class="history-group-title">Today</div>
+                <div class="history-item active" onclick="startNewChat()">
+                    <div class="item-label"><i class="fa-regular fa-message"></i><span>New Conversation</span></div>
+                    <i class="fa-solid fa-ellipsis item-dots" onclick="openContextMenu(event, 'New Conversation')"></i>
+                </div>
+                <div class="history-item" onclick="triggerQuickAction('ats')">
+                    <div class="item-label"><i class="fa-regular fa-message"></i><span>AI Career ATS Audit</span></div>
+                    <i class="fa-solid fa-ellipsis item-dots" onclick="openContextMenu(event, 'AI Career ATS Audit')"></i>
+                </div>
+                <div class="history-item" onclick="triggerQuickAction('interview')">
+                    <div class="item-label"><i class="fa-regular fa-message"></i><span>Python Mock Interview</span></div>
+                    <i class="fa-solid fa-ellipsis item-dots" onclick="openContextMenu(event, 'Python Mock Interview')"></i>
+                </div>
+
+                <div class="history-group-title">Yesterday</div>
+                <div class="history-item" onclick="triggerQuickAction('jobs')">
+                    <div class="item-label"><i class="fa-regular fa-message"></i><span>Job Role Matcher</span></div>
+                    <i class="fa-solid fa-ellipsis item-dots" onclick="openContextMenu(event, 'Job Role Matcher')"></i>
+                </div>
+                <div class="history-item" onclick="triggerQuickAction('coverletter')">
+                    <div class="item-label"><i class="fa-regular fa-message"></i><span>Executive Cover Letter</span></div>
+                    <i class="fa-solid fa-ellipsis item-dots" onclick="openContextMenu(event, 'Executive Cover Letter')"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar-footer">
+            <div class="profile-bar" onclick="openLoginModal()">
+                <div class="profile-meta">
+                    <div class="avatar-box" id="user-avatar-text">SA</div>
+                    <div class="profile-text">
+                        <div class="name" id="user-name-text">Sathish Reddy</div>
+                        <div class="badge">Pro Member</div>
+                    </div>
+                </div>
+                <i class="fa-solid fa-ellipsis" style="color: var(--text-subtle);"></i>
+            </div>
+            
+            <button class="btn-google-login" onclick="openLoginModal()">
+                <svg class="google-svg" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.1c-.22-.66-.35-1.36-.35-2.1s.13-1.44.35-2.1V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.62z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                </svg>
+                <span>Log in with Google</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- 2. MAIN WORKSPACE -->
+    <main>
+        
+        <div class="top-header">
+            <!-- Multi-AI Engine Selector Dropdown Button -->
+            <div class="model-picker" onclick="toggleModelMenu()" id="model-picker-btn">
+                <span id="active-model-name">ChatGPT 4o</span> <i class="fa-solid fa-chevron-down"></i>
+            </div>
+
+            <!-- Multi-AI Model Switcher Dropdown (ChatGPT, Gemini, Nano Banana, Claude, Perplexity, Meta AI) -->
+            <div class="model-menu" id="model-menu">
+                <div class="model-option active" onclick="selectAIModel('chatgpt')">
+                    <i class="fa-solid fa-brain" style="color: var(--brand-chatgpt);"></i>
+                    <div>
+                        <div style="font-weight: 600;">ChatGPT 4o</div>
+                        <div style="font-size: 0.75rem; color: var(--text-subtle);">OpenAI Intelligence</div>
+                    </div>
+                </div>
+                <div class="model-option" onclick="selectAIModel('gemini')">
+                    <i class="fa-solid fa-sparkles" style="color: var(--brand-gemini);"></i>
+                    <div>
+                        <div style="font-weight: 600;">Gemini 1.5 Pro</div>
+                        <div style="font-size: 0.75rem; color: var(--text-subtle);">Google DeepMind AI</div>
+                    </div>
+                </div>
+                <div class="model-option" onclick="selectAIModel('banana')">
+                    <i class="fa-solid fa-bolt" style="color: var(--brand-banana);"></i>
+                    <div>
+                        <div style="font-weight: 600;">Nano Banana AI</div>
+                        <div style="font-size: 0.75rem; color: var(--text-subtle);">Ultra-Fast Lightweight AI</div>
+                    </div>
+                </div>
+                <div class="model-option" onclick="selectAIModel('claude')">
+                    <i class="fa-solid fa-feather-pointed" style="color: var(--brand-claude);"></i>
+                    <div>
+                        <div style="font-weight: 600;">Claude 3.5 Sonnet</div>
+                        <div style="font-size: 0.75rem; color: var(--text-subtle);">Anthropic AI</div>
+                    </div>
+                </div>
+                <div class="model-option" onclick="selectAIModel('perplexity')">
+                    <i class="fa-solid fa-magnifying-glass-chart" style="color: var(--brand-perplexity);"></i>
+                    <div>
+                        <div style="font-weight: 600;">Perplexity AI</div>
+                        <div style="font-size: 0.75rem; color: var(--text-subtle);">Deep Research &amp; Search</div>
+                    </div>
+                </div>
+                <div class="model-option" onclick="selectAIModel('meta')">
+                    <i class="fa-solid fa-cubes" style="color: var(--brand-meta);"></i>
+                    <div>
+                        <div style="font-weight: 600;">Meta AI (Llama 3)</div>
+                        <div style="font-size: 0.75rem; color: var(--text-subtle);">Meta Open Source Engine</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="top-right-actions">
+                <button class="btn-share-header" onclick="openShareModal('AI Career Intelligence Platform')">
+                    <i class="fa-solid fa-arrow-up-from-bracket"></i>
+                    <span>Share</span>
+                </button>
+                <button class="icon-btn" style="font-size: 1.1rem; padding: 0.4rem 0.6rem;" onclick="openContextMenu(event, 'AI Career Intelligence Platform')" title="More Options">
+                    <i class="fa-solid fa-ellipsis"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="chat-viewport">
+            <div class="hero-view" id="hero-landing">
+                <div class="gpt-hero-icon" id="hero-model-icon">
+                    <svg style="width: 28px; height: 28px;" viewBox="0 0 24 24"><path d="M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.0729zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1686a.071.071 0 0 1 .038.052v5.5826a4.5045 4.5045 0 0 1-4.4945 4.4944zm-9.6607-4.1254a4.4708 4.4708 0 0 1-.535-3.0137l.142.0852 4.783 2.7582a.7712.7712 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4997 4.4997 0 0 1-6.1408-1.6464zM2.3401 8.64a4.4708 4.4708 0 0 1 2.3655-1.9728V12.2a.7853.7853 0 0 0 .388.6766l5.8144 3.3543-2.0201 1.1686a.0757.0757 0 0 1-.071 0l-4.8303-2.7913A4.4997 4.4997 0 0 1 2.34 8.64zm16.597 3.8558l-5.838-3.3685 2.0153-1.1639a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6868a.79.79 0 0 0-.402-.6763zm2.0107-3.0231l-.1419-.0852-4.7735-2.7582a.7759.7759 0 0 0-.7854 0L9.409 9.9977V7.6653a.0757.0757 0 0 1 .0331-.0615l4.8304-2.7914a4.5045 4.5045 0 0 1 6.6802 4.8087zM8.3065 12.863l-2.02-1.1638a.0804.0804 0 0 1-.038-.052V6.0646a4.4997 4.4997 0 0 1 7.3757-3.4537l-.1419.0804-4.7783 2.7583a.7948.7948 0 0 0-.3927.6813v6.7321zm1.1458-1.6708l3.3069-1.9082 3.307 1.9082v3.8164l-3.307 1.9082-3.3069-1.9082z"/></svg>
+                </div>
+                <div class="hero-title" id="hero-title-text">What can I help with today?</div>
+            </div>
+
+            <div class="message-stream" id="message-stream"></div>
+        </div>
+
+        <div class="bottom-container">
+            <!-- 3. ATTACHMENT & TOOLS POPUP MENU (With Extracted Career Tools & AI Models) -->
+            <div class="attachment-tools-popup" id="tools-popup-menu">
+                
+                <!-- Pill item 1: Add photos & files -->
+                <div class="tool-top-pill" onclick="document.getElementById('file-picker').click(); toggleToolsPopup();">
+                    <div class="pill-main">
+                        <i class="fa-solid fa-paperclip"></i>
+                        <span>Add photos &amp; files</span>
+                    </div>
+                    <div class="pill-sub">Upload from computer</div>
+                </div>
+
+                <!-- Career Feature Tool 1: Analyze Resume ATS Score -->
+                <div class="tool-menu-item" onclick="triggerQuickActionInNewChat('ats', 'Analyze Resume ATS Score')">
+                    <div class="tool-item-left">
+                        <div class="tool-icon-box" style="color: var(--brand-chatgpt);"><i class="fa-solid fa-file-arrow-up"></i></div>
+                        <div class="tool-item-text">
+                            <div class="tool-name">Analyze Resume ATS Score</div>
+                            <div class="tool-desc">Upload PDF/DOCX resume &amp; detect missing skills</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Career Feature Tool 2: Practice Python Mock Interview -->
+                <div class="tool-menu-item" onclick="triggerQuickActionInNewChat('interview', 'Python Mock Interview')">
+                    <div class="tool-item-left">
+                        <div class="tool-icon-box" style="color: #3b82f6;"><i class="fa-solid fa-comments"></i></div>
+                        <div class="tool-item-text">
+                            <div class="tool-name">Practice Python Mock Interview</div>
+                            <div class="tool-desc">Technical &amp; behavioral questions with AI scoring</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Career Feature Tool 3: Predict Job Role Matches -->
+                <div class="tool-menu-item" onclick="triggerQuickActionInNewChat('jobs', 'Predict Job Role Matches')">
+                    <div class="tool-item-left">
+                        <div class="tool-icon-box" style="color: #a855f7;"><i class="fa-solid fa-briefcase"></i></div>
+                        <div class="tool-item-text">
+                            <div class="tool-name">Predict Job Role Matches</div>
+                            <div class="tool-desc">Calculate match percentage against backend roles</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Career Feature Tool 4: Generate Cover Letter -->
+                <div class="tool-menu-item" onclick="triggerQuickActionInNewChat('coverletter', 'Executive Cover Letter')">
+                    <div class="tool-item-left">
+                        <div class="tool-icon-box" style="color: #f59e0b;"><i class="fa-solid fa-envelope-open-text"></i></div>
+                        <div class="tool-item-text">
+                            <div class="tool-name">Generate Cover Letter</div>
+                            <div class="tool-desc">Tailored executive cover letter for applications</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Menu Item: Create image -->
+                <div class="tool-menu-item" onclick="triggerQuickActionInNewChat('create-image', 'Create Image Visualization')">
+                    <div class="tool-item-left">
+                        <div class="tool-icon-box" style="color: #38bdf8;"><i class="fa-solid fa-image"></i></div>
+                        <div class="tool-item-text">
+                            <div class="tool-name">Create image</div>
+                            <div class="tool-desc">Visualize anything</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Menu Item: Web search -->
+                <div class="tool-menu-item" onclick="triggerQuickActionInNewChat('web-search', 'Web Search Real-Time Trends')">
+                    <div class="tool-item-left">
+                        <div class="tool-icon-box" style="color: #3b82f6;"><i class="fa-solid fa-globe"></i></div>
+                        <div class="tool-item-text">
+                            <div class="tool-name">Web search</div>
+                            <div class="tool-desc">Find real-time news and info</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Menu Item: Deep research -->
+                <div class="tool-menu-item" onclick="triggerQuickActionInNewChat('deep-research', 'Deep Research Report')">
+                    <div class="tool-item-left">
+                        <div class="tool-icon-box" style="color: #60a5fa;"><i class="fa-solid fa-binoculars"></i></div>
+                        <div class="tool-item-text">
+                            <div class="tool-name">Deep research</div>
+                            <div class="tool-desc">Get a detailed report</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Menu Item: Visualize -->
+                <div class="tool-menu-item" onclick="triggerQuickActionInNewChat('visualize', 'Interactive Data Visualization')">
+                    <div class="tool-item-left">
+                        <div class="tool-icon-box" style="color: #f43f5e;"><i class="fa-solid fa-chart-pie"></i></div>
+                        <div class="tool-item-text">
+                            <div class="tool-name">Visualize</div>
+                            <div class="tool-desc">Create visualizations and interactive tools</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Menu Item: GitHub -->
+                <div class="tool-menu-item" onclick="showToast('Connecting to GitHub...')">
+                    <div class="tool-item-left">
+                        <div class="tool-icon-box" style="color: #ffffff;"><i class="fa-brands fa-github"></i></div>
+                        <div class="tool-item-text">
+                            <div class="tool-name">GitHub</div>
+                            <div class="tool-desc">Triage PRs, issues, CI, and publish flows</div>
+                        </div>
+                    </div>
+                    <div class="btn-connect">Connect</div>
+                </div>
+
+                <!-- Menu Item: Canva -->
+                <div class="tool-menu-item" onclick="showToast('Connecting to Canva...')">
+                    <div class="tool-item-left">
+                        <div class="tool-icon-box" style="color: #06b6d4;"><i class="fa-solid fa-palette"></i></div>
+                        <div class="tool-item-text">
+                            <div class="tool-name">Canva</div>
+                            <div class="tool-desc">Create, review, edit designs</div>
+                        </div>
+                    </div>
+                    <div class="btn-connect">Connect</div>
+                </div>
+
+                <!-- Bottom Search Bar -->
+                <div class="popup-search-bar">
+                    <span>Type to search plugins, files, folders &amp; skills</span>
+                    <i class="fa-solid fa-arrow-down" style="font-size:0.75rem;"></i>
+                </div>
+            </div>
+
+            <div id="attached-chip-container" style="display: none;"></div>
+
+            <div class="prompt-box">
+                <textarea id="user-prompt-text" class="prompt-textarea" rows="2" placeholder="Message ChatGPT, Gemini, Claude, Meta AI..." onkeydown="handleKeyDown(event)"></textarea>
+
+                <div class="prompt-actions">
+                    <div class="action-icons-left">
+                        <i class="fa-solid fa-paperclip" title="Add photos &amp; files" onclick="toggleToolsPopup()"></i>
+                        <i class="fa-solid fa-globe" title="Search web" onclick="triggerQuickActionInNewChat('web-search', 'Web Search Real-Time')"></i>
+                        <i class="fa-solid fa-microphone" title="Voice input" onclick="showToast('Listening for voice input...')"></i>
+                    </div>
+                    <button class="btn-send" onclick="submitMessage()"><i class="fa-solid fa-arrow-up"></i></button>
+                </div>
+            </div>
+
+            <input type="file" id="file-picker" style="display: none;" accept=".pdf,.docx" onchange="fileChosen(this)">
+
+            <div class="footer-note" id="footer-note-text">AI models can make mistakes. Check important info.</div>
+        </div>
+
+    </main>
+
+    <!-- Share Modal -->
+    <div class="modal-overlay" id="share-modal" onclick="if(event.target===this) closeShareModal()">
+        <div class="share-modal-card">
+            <div class="share-modal-header">
+                <div class="share-modal-title" id="share-title-text">AI Career Intelligence Platform</div>
+                <button class="btn-close-modal" onclick="closeShareModal()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <div class="share-preview-box">
+                <div class="user-prompt-preview">what will do AI Career Intelligence Platform</div>
+                <div class="bot-reply-preview">
+                    AI Career Intelligence Platform is an <strong>enterprise AI career advisor tool</strong>. It lets candidates analyze resume ATS score compatibility, detect missing technical keywords, practice mock interviews, and predict job role matches.
+                </div>
+                <div class="watermark-badge" id="modal-watermark">ChatGPT</div>
+            </div>
+
+            <div class="share-actions-row">
+                <div class="share-circle-btn" onclick="copyWebsiteLink()">
+                    <div class="circle-icon"><i class="fa-solid fa-link"></i></div>
+                    <div class="circle-label">Copy link</div>
+                </div>
+                <a class="share-circle-btn" id="share-x-link" href="#" target="_blank" rel="noopener noreferrer">
+                    <div class="circle-icon"><i class="fa-brands fa-x-twitter"></i></div>
+                    <div class="circle-label">X</div>
+                </a>
+                <a class="share-circle-btn" id="share-linkedin-link" href="#" target="_blank" rel="noopener noreferrer">
+                    <div class="circle-icon"><i class="fa-brands fa-linkedin-in"></i></div>
+                    <div class="circle-label">LinkedIn</div>
+                </a>
+                <a class="share-circle-btn" id="share-reddit-link" href="#" target="_blank" rel="noopener noreferrer">
+                    <div class="circle-icon"><i class="fa-brands fa-reddit-alien"></i></div>
+                    <div class="circle-label">Reddit</div>
+                </a>
+            </div>
+
+            <div class="share-modal-footer">Memory sources won't be shared with viewers.</div>
+        </div>
+    </div>
+
+    <!-- Context Menu -->
+    <div class="context-menu" id="context-menu">
+        <div class="menu-option" onclick="openShareModal(selectedChatTitle)">
+            <div class="menu-option-left"><i class="fa-solid fa-arrow-up-from-bracket"></i><span>Share</span></div>
+        </div>
+        <div class="menu-option" onclick="renameChat()">
+            <div class="menu-option-left"><i class="fa-regular fa-pen-to-square"></i><span>Rename</span></div>
+        </div>
+        <div class="menu-option" onclick="moveToProject()">
+            <div class="menu-option-left"><i class="fa-regular fa-folder"></i><span>Move to project</span></div>
+            <i class="fa-solid fa-chevron-right" style="font-size:0.75rem; color:var(--text-subtle);"></i>
+        </div>
+        <div class="menu-option" onclick="pinChat()">
+            <div class="menu-option-left"><i class="fa-solid fa-thumbtack"></i><span>Pin chat</span></div>
+        </div>
+        <div class="menu-option" onclick="archiveChat()">
+            <div class="menu-option-left"><i class="fa-regular fa-box-archive"></i><span>Archive</span></div>
+        </div>
+        <div class="menu-option danger" onclick="deleteChat()">
+            <div class="menu-option-left"><i class="fa-regular fa-trash-can"></i><span>Delete</span></div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast-notify" id="toast-msg">Link copied to clipboard!</div>
+
+    <!-- JavaScript Handlers -->
+    <script>
+        let currentFile = null;
+        let selectedChatTitle = "AI Career Intelligence Platform";
+        let activeModel = "chatgpt";
+
+        const modelMeta = {
+            'chatgpt': { name: 'ChatGPT 4o', brand: 'ChatGPT', color: '#10a37f', icon: '<svg style="width: 28px; height: 28px;" viewBox="0 0 24 24"><path d="M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.0729zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1686a.071.071 0 0 1 .038.052v5.5826a4.5045 4.5045 0 0 1-4.4945 4.4944zm-9.6607-4.1254a4.4708 4.4708 0 0 1-.535-3.0137l.142.0852 4.783 2.7582a.7712.7712 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4997 4.4997 0 0 1-6.1408-1.6464zM2.3401 8.64a4.4708 4.4708 0 0 1 2.3655-1.9728V12.2a.7853.7853 0 0 0 .388.6766l5.8144 3.3543-2.0201 1.1686a.0757.0757 0 0 1-.071 0l-4.8303-2.7913A4.4997 4.4997 0 0 1 2.34 8.64zm16.597 3.8558l-5.838-3.3685 2.0153-1.1639a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6868a.79.79 0 0 0-.402-.6763zm2.0107-3.0231l-.1419-.0852-4.7735-2.7582a.7759.7759 0 0 0-.7854 0L9.409 9.9977V7.6653a.0757.0757 0 0 1 .0331-.0615l4.8304-2.7914a4.5045 4.5045 0 0 1 6.6802 4.8087zM8.3065 12.863l-2.02-1.1638a.0804.0804 0 0 1-.038-.052V6.0646a4.4997 4.4997 0 0 1 7.3757-3.4537l-.1419.0804-4.7783 2.7583a.7948.7948 0 0 0-.3927.6813v6.7321zm1.1458-1.6708l3.3069-1.9082 3.307 1.9082v3.8164l-3.307 1.9082-3.3069-1.9082z"/></svg>' },
+            'gemini': { name: 'Gemini 1.5 Pro', brand: 'Google Gemini', color: '#a855f7', icon: '<i class="fa-solid fa-sparkles" style="color:#a855f7;"></i>' },
+            'banana': { name: 'Nano Banana AI', brand: 'Nano Banana', color: '#eab308', icon: '<i class="fa-solid fa-bolt" style="color:#eab308;"></i>' },
+            'claude': { name: 'Claude 3.5 Sonnet', brand: 'Claude AI', color: '#d97706', icon: '<i class="fa-solid fa-feather-pointed" style="color:#d97706;"></i>' },
+            'perplexity': { name: 'Perplexity AI', brand: 'Perplexity', color: '#06b6d4', icon: '<i class="fa-solid fa-magnifying-glass-chart" style="color:#06b6d4;"></i>' },
+            'meta': { name: 'Meta AI (Llama 3)', brand: 'Meta AI', color: '#3b82f6', icon: '<i class="fa-solid fa-cubes" style="color:#3b82f6;"></i>' }
+        };
+
+        function toggleToolsPopup() {
+            const popup = document.getElementById('tools-popup-menu');
+            popup.style.display = (popup.style.display === 'block') ? 'none' : 'block';
+        }
+
+        document.addEventListener('click', (e) => {
+            const paperclip = document.querySelector('.action-icons-left .fa-paperclip');
+            const popup = document.getElementById('tools-popup-menu');
+            if (paperclip && popup && !paperclip.contains(e.target) && !popup.contains(e.target)) {
+                popup.style.display = 'none';
+            }
+        });
+
+        function toggleModelMenu() {
+            const menu = document.getElementById('model-menu');
+            menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+        }
+
+        function selectAIModel(modelType) {
+            activeModel = modelType;
+            document.getElementById('model-menu').style.display = 'none';
+            
+            const meta = modelMeta[modelType];
+            document.getElementById('active-model-name').innerText = meta.name;
+            document.getElementById('brand-name-text').innerText = meta.brand;
+            document.getElementById('modal-watermark').innerText = meta.brand;
+            document.getElementById('hero-model-icon').innerHTML = meta.icon;
+
+            document.documentElement.style.setProperty('--current-brand', meta.color);
+
+            document.querySelectorAll('.model-option').forEach(opt => opt.classList.remove('active'));
+            const options = document.querySelectorAll('.model-option');
+            const idxMap = { 'chatgpt': 0, 'gemini': 1, 'banana': 2, 'claude': 3, 'perplexity': 4, 'meta': 5 };
+            if (options[idxMap[modelType]]) options[idxMap[modelType]].classList.add('active');
+
+            showToast("Switched to " + meta.name + " Engine");
+        }
+
+        function startNewChat() {
+            document.getElementById('hero-landing').style.display = 'flex';
+            document.getElementById('message-stream').style.display = 'none';
+            document.getElementById('message-stream').innerHTML = '';
+            document.getElementById('user-prompt-text').value = '';
+            clearAttachment();
+        }
+
+        /* 1. EXTRACT NEW CHAT SESSION WHEN CLICKING ANY TOOL OR ATS SCORE */
+        function triggerQuickActionInNewChat(actionType, chatTitle) {
+            // Hide tool popup menu
+            const popup = document.getElementById('tools-popup-menu');
+            if (popup) popup.style.display = 'none';
+
+            // Start clean new chat session
+            startNewChat();
+
+            // Add new history entry to sidebar
+            addNewSidebarChatEntry(chatTitle);
+
+            // Populate prompt text
+            const input = document.getElementById('user-prompt-text');
+            if (actionType === 'ats') {
+                input.value = "Analyze my uploaded resume for Python Developer role and calculate my ATS score.";
+            } else if (actionType === 'interview') {
+                input.value = "Practice Python mock interview questions with technical and behavioral STAR scenarios.";
+            } else if (actionType === 'jobs') {
+                input.value = "Predict job role matches and salary ranges based on my technical skills.";
+            } else if (actionType === 'coverletter') {
+                input.value = "Generate a tailored executive cover letter for TechInnovate Inc.";
+            } else if (actionType === 'create-image') {
+                input.value = "Create a high-resolution architecture diagram of the AI Career Intelligence Platform.";
+            } else if (actionType === 'web-search') {
+                input.value = "Search live tech job market trends and top backend developer skills for 2026.";
+            } else if (actionType === 'deep-research') {
+                input.value = "Conduct deep research report on modern ATS parser algorithms and keyword ranking.";
+            } else if (actionType === 'visualize') {
+                input.value = "Generate an interactive chart visualizing candidate ATS score progression.";
+            }
+
+            // Execute prompt in new chat
+            submitMessage();
+        }
+
+        function addNewSidebarChatEntry(title) {
+            const historyList = document.getElementById('sidebar-chat-history');
+            document.querySelectorAll('.history-item').forEach(item => item.classList.remove('active'));
+
+            const newItem = document.createElement('div');
+            newItem.className = 'history-item active';
+            newItem.onclick = function() {
+                document.querySelectorAll('.history-item').forEach(i => i.classList.remove('active'));
+                newItem.classList.add('active');
+            };
+
+            newItem.innerHTML = `
+                <div class="item-label"><i class="fa-regular fa-message"></i><span>${title}</span></div>
+                <i class="fa-solid fa-ellipsis item-dots" onclick="openContextMenu(event, '${title}')"></i>
+            `;
+
+            const todayHeader = historyList.querySelector('.history-group-title');
+            if (todayHeader && todayHeader.nextSibling) {
+                historyList.insertBefore(newItem, todayHeader.nextSibling);
+            } else {
+                historyList.prepend(newItem);
+            }
+        }
+
+        function sendSuggestedFollowUp(promptText) {
+            const input = document.getElementById('user-prompt-text');
+            input.value = promptText;
+            submitMessage();
+        }
+
+        function openShareModal(title) {
+            selectedChatTitle = title || "AI Career Intelligence Platform";
+            document.getElementById('share-title-text').innerText = selectedChatTitle;
+            const currentUrl = window.location.href;
+            document.getElementById('share-x-link').href = `https://twitter.com/intent/tweet?text=Check%20out%20${encodeURIComponent(selectedChatTitle)}&url=${encodeURIComponent(currentUrl)}`;
+            document.getElementById('share-linkedin-link').href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(currentUrl)}`;
+            document.getElementById('share-reddit-link').href = `https://reddit.com/submit?url=${encodeURIComponent(currentUrl)}&title=${encodeURIComponent(selectedChatTitle)}`;
+            document.getElementById('share-modal').style.display = 'flex';
+            closeContextMenu();
+        }
+
+        function closeShareModal() { document.getElementById('share-modal').style.display = 'none'; }
+
+        function copyWebsiteLink() {
+            const url = window.location.href;
+            navigator.clipboard.writeText(url).then(() => {
+                showToast("Link copied to clipboard!");
+                closeShareModal();
+            }).catch(() => {
+                showToast("Link copied: " + url);
+                closeShareModal();
+            });
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast-msg');
+            toast.innerText = msg;
+            toast.style.display = 'block';
+            setTimeout(() => { toast.style.display = 'none'; }, 2500);
+        }
+
+        function openContextMenu(e, title) {
+            e.stopPropagation();
+            selectedChatTitle = title;
+            const menu = document.getElementById('context-menu');
+            menu.style.display = 'block';
+            menu.style.top = e.pageY + 'px';
+            menu.style.left = e.pageX + 'px';
+        }
+
+        function closeContextMenu() { document.getElementById('context-menu').style.display = 'none'; }
+        document.addEventListener('click', closeContextMenu);
+
+        function renameChat() { showToast("Renamed session: " + selectedChatTitle); closeContextMenu(); }
+        function moveToProject() { showToast("Moved to project folder"); closeContextMenu(); }
+        function pinChat() { showToast("Pinned session to top"); closeContextMenu(); }
+        function archiveChat() { showToast("Archived session"); closeContextMenu(); }
+        function deleteChat() { showToast("Deleted session"); closeContextMenu(); }
+
+        function openLoginModal() {
+            window.open('/google-login', 'GoogleAuthWindow', 'width=500,height=600');
+        }
+
+        window.addEventListener('message', (event) => {
+            if (event.data && event.data.type === 'GOOGLE_LOGIN_SUCCESS') {
+                document.getElementById('user-name-text').innerText = event.data.user;
+                document.getElementById('user-avatar-text').innerText = "SR";
+                showToast("Google account linked: " + event.data.email);
+            }
+        });
+
+        function fileChosen(input) {
+            if (input.files && input.files[0]) {
+                currentFile = input.files[0];
+                const chip = document.getElementById('attached-chip-container');
+                chip.style.display = 'inline-flex';
+                chip.className = 'file-chip';
+                chip.innerHTML = `<i class="fa-solid fa-file-pdf"></i> ${currentFile.name} <i class="fa-solid fa-xmark" style="cursor:pointer; margin-left:0.5rem;" onclick="clearAttachment()"></i>`;
+            }
+        }
+
+        function clearAttachment() {
+            currentFile = null;
+            document.getElementById('attached-chip-container').style.display = 'none';
+            document.getElementById('file-picker').value = '';
+        }
+
+        function handleKeyDown(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                submitMessage();
+            }
+        }
+
+        async function uploadFileIfNeeded() {
+            if (!currentFile) return null;
+            try {
+                const formData = new FormData();
+                formData.append('file', currentFile);
+                const res = await fetch('/api/chatbot/upload-resume', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+                if (data.success) {
+                    showToast("Resume attached: " + data.filename);
+                    return data;
+                }
+            } catch (err) {
+                console.error("Resume upload error:", err);
+            }
+            return null;
+        }
+
+        async function recordFeedback(conversationId, queryText, responseText, feedbackType) {
+            try {
+                await fetch('/api/chatbot/feedback', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        conversation_id: conversationId,
+                        query: queryText,
+                        response: responseText,
+                        feedback_type: feedbackType
+                    })
+                });
+                showToast(feedbackType === 'thumbs_up' ? 'Feedback recorded: Great answer!' : 'Feedback recorded: Needs improvement');
+            } catch (err) {
+                showToast('Feedback submitted!');
+            }
+        }
+
+        async function submitMessage() {
+            const input = document.getElementById('user-prompt-text');
+            const promptText = input.value.trim();
+            if (!promptText && !currentFile) return;
+
+            // Upload resume file if attached
+            let fileUploadMeta = null;
+            if (currentFile) {
+                fileUploadMeta = await uploadFileIfNeeded();
+            }
+
+            document.getElementById('hero-landing').style.display = 'none';
+            const stream = document.getElementById('message-stream');
+            stream.style.display = 'flex';
+
+            let userHTML = `<div class="message-row user"><div class="message-bubble">${promptText}`;
+            if (currentFile) {
+                userHTML += `<div style="margin-top:0.4rem; font-size:0.8rem; color:#a855f7;"><i class="fa-solid fa-paperclip"></i> Attached: ${currentFile.name}</div>`;
+            }
+            userHTML += `</div></div>`;
+            stream.innerHTML += userHTML;
+
+            const querySent = promptText || (currentFile ? `Analyze resume: ${currentFile.name}` : "");
+            input.value = '';
+
+            const botRow = document.createElement('div');
+            botRow.className = 'message-row assistant';
+            
+            const meta = modelMeta[activeModel] || modelMeta["Gemini"];
+
+            botRow.innerHTML = `
+                <div class="assistant-avatar">${meta.icon}</div>
+                <div class="message-bubble">
+                    <span class="typewriter-body"><i class="fa-solid fa-spinner fa-spin" style="color:var(--text-subtle); margin-right:6px;"></i> Generating response...</span><span class="cursor-blink"></span>
+                    <div class="followup-suggestions-container" style="display: none;">
+                        <div class="followup-title"><i class="fa-solid fa-lightbulb" style="color:#eab308;"></i> Suggested Follow-up Questions:</div>
+                        <div class="followup-chips-row"></div>
+                    </div>
+                    <div class="msg-actions" style="display: none;">
+                        <i class="fa-regular fa-copy" title="Copy response" onclick="copyBotResponse(this)"></i>
+                        <i class="fa-regular fa-thumbs-up" title="Good response" onclick="handleThumbsUp(this)"></i>
+                        <i class="fa-regular fa-thumbs-down" title="Bad response" onclick="handleThumbsDown(this)"></i>
+                        <i class="fa-solid fa-rotate-right" title="Regenerate" onclick="sendSuggestedFollowUp('${querySent.replace(/'/g, "\\'")}')"></i>
+                    </div>
+                </div>
+            `;
+            stream.appendChild(botRow);
+            stream.scrollTop = stream.scrollHeight;
+
+            const textTarget = botRow.querySelector('.typewriter-body');
+            const cursor = botRow.querySelector('.cursor-blink');
+            const followupBox = botRow.querySelector('.followup-suggestions-container');
+            const followupRow = botRow.querySelector('.followup-chips-row');
+            const actions = botRow.querySelector('.msg-actions');
+
+            let responseText = "";
+            let htmlEmbed = "";
+            let suggestions = [];
+            let conversationId = null;
+
+            try {
+                const apiRes = await fetch('/api/chatbot/ask', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        query: querySent,
+                        model: meta.name.includes("Gemini") ? "Gemini" : meta.name.includes("ChatGPT") ? "ChatGPT" : meta.name.includes("Claude") ? "Claude" : meta.name.includes("Perplexity") ? "Perplexity" : meta.name.includes("Meta") ? "Meta AI" : "Nano Banana",
+                        persona: "Career Advisor"
+                    })
+                });
+                const resData = await apiRes.json();
+                if (resData.success) {
+                    responseText = resData.response || "";
+                    htmlEmbed = resData.html_embed || "";
+                    suggestions = resData.suggestions || [];
+                    conversationId = resData.conversation_id;
+                    botRow.setAttribute('data-conv-id', conversationId || '');
+                    botRow.setAttribute('data-query', querySent);
+                    botRow.setAttribute('data-response', responseText);
+                } else {
+                    responseText = `Sorry, I encountered an issue: ${resData.message || 'Unable to process query'}`;
+                }
+            } catch (err) {
+                console.error("Chatbot API error:", err);
+                responseText = `[${meta.name}]: I'm here to provide career, resume, and interview guidance. Focus on high-impact projects, ATS keyword alignment, and STAR method interview preparation.`;
+            }
+
+            // Animate text typing
+            let index = 0;
+            textTarget.innerText = "";
+            const timer = setInterval(() => {
+                textTarget.innerText = responseText.substring(0, index);
+                index += 2;
+                stream.scrollTop = stream.scrollHeight;
+
+                if (index > responseText.length) {
+                    clearInterval(timer);
+                    textTarget.innerText = responseText;
+                    if (cursor) cursor.style.display = 'none';
+                    if (htmlEmbed) {
+                        textTarget.innerHTML += htmlEmbed;
+                    }
+
+                    // Render Follow-up Suggestions Chips
+                    if (suggestions && suggestions.length > 0) {
+                        followupRow.innerHTML = '';
+                        suggestions.forEach(sug => {
+                            const chip = document.createElement('div');
+                            chip.className = 'followup-chip';
+                            chip.innerText = sug;
+                            chip.onclick = function() { sendSuggestedFollowUp(sug); };
+                            followupRow.appendChild(chip);
+                        });
+                        followupBox.style.display = 'flex';
+                    }
+
+                    actions.style.display = 'flex';
+                    stream.scrollTop = stream.scrollHeight;
+                    addNewSidebarChatEntry(querySent.length > 25 ? querySent.substring(0, 25) + '...' : querySent);
+                }
+            }, 12);
+
+            clearAttachment();
+        }
+
+        function copyBotResponse(el) {
+            const row = el.closest('.message-row');
+            const body = row.querySelector('.typewriter-body');
+            if (body) {
+                navigator.clipboard.writeText(body.innerText).then(() => {
+                    showToast("Copied response to clipboard!");
+                });
+            }
+        }
+
+        function handleThumbsUp(el) {
+            const row = el.closest('.message-row');
+            const convId = row.getAttribute('data-conv-id');
+            const q = row.getAttribute('data-query');
+            const r = row.getAttribute('data-response');
+            recordFeedback(convId, q, r, 'thumbs_up');
+        }
+
+        function handleThumbsDown(el) {
+            const row = el.closest('.message-row');
+            const convId = row.getAttribute('data-conv-id');
+            const q = row.getAttribute('data-query');
+            const r = row.getAttribute('data-response');
+            recordFeedback(convId, q, r, 'thumbs_down');
+        }
+    </script>
+</body>
+</html>
