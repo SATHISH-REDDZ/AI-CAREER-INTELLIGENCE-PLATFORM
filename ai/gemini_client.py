@@ -12,7 +12,7 @@ from typing import Optional, Dict, Any
 
 class GeminiClient:
     """
-    Wrapper for Google Gemini API using official google-genai SDK with resilient fallbacks.
+    Unified client wrapper for Google Gemini API using official google-genai SDK.
     """
 
     def __init__(self, api_key: Optional[str] = None):
@@ -22,48 +22,29 @@ class GeminiClient:
 
         if self.api_key:
             try:
-                # Primary: Official Google GenAI SDK (from google import genai)
                 from google import genai
                 self._client = genai.Client(api_key=self.api_key)
             except Exception as e:
-                # Fallback to legacy SDK if google-genai not available in local environment
-                try:
-                    import google.generativeai as legacy_genai
-                    legacy_genai.configure(api_key=self.api_key)
-                    self._legacy_genai = legacy_genai
-                except Exception as legacy_err:
-                    print(f"[GeminiClient] Failed to initialize Google GenAI SDK: {e} / Legacy: {legacy_err}")
+                print(f"[GeminiClient] Google GenAI SDK initialization notice: {e}")
 
     def generate_text(self, prompt: str, system_instruction: Optional[str] = None) -> Optional[str]:
         """
         Generate text response from Gemini API using google-genai SDK.
         """
-        if not self.api_key:
+        if not self.api_key or not self._client:
             return None
 
         full_prompt = f"{system_instruction}\n\n{prompt}" if system_instruction else prompt
 
-        # 1. Try Google GenAI SDK client
-        if hasattr(self, "_client") and self._client:
-            try:
-                response = self._client.models.generate_content(
-                    model=self.model_name,
-                    contents=full_prompt
-                )
-                if response and hasattr(response, "text") and response.text:
-                    return response.text.strip()
-            except Exception as err:
-                print(f"[GeminiClient] genai.Client error: {err}")
-
-        # 2. Try Legacy SDK fallback
-        if hasattr(self, "_legacy_genai") and self._legacy_genai:
-            try:
-                model = self._legacy_genai.GenerativeModel("gemini-1.5-flash")
-                response = model.generate_content(full_prompt)
-                if response and response.text:
-                    return response.text.strip()
-            except Exception as err:
-                print(f"[GeminiClient] legacy genai error: {err}")
+        try:
+            response = self._client.models.generate_content(
+                model=self.model_name,
+                contents=full_prompt
+            )
+            if response and hasattr(response, "text") and response.text:
+                return response.text.strip()
+        except Exception as err:
+            print(f"[GeminiClient] API generation error: {err}")
 
         return None
 

@@ -133,16 +133,15 @@ class ResumeService:
         gemini_api_key = current_app.config.get("GEMINI_API_KEY")
         if gemini_api_key and text:
             try:
-                import google.generativeai as genai
-                genai.configure(api_key=gemini_api_key)
-                model = genai.GenerativeModel("gemini-1.5-flash")
+                from ai.gemini_client import GeminiClient
+                client = GeminiClient(api_key=gemini_api_key)
                 prompt = (
                     f"Analyze this candidate resume for the role of '{target_role}':\n\n{text[:3000]}\n\n"
                     f"Provide a 2-3 sentence executive summary of candidate strengths and key improvement recommendations."
                 )
-                response = model.generate_content(prompt)
-                if response and response.text:
-                    summary = response.text.strip()
+                ai_summary = client.generate_text(prompt=prompt)
+                if ai_summary:
+                    summary = ai_summary
             except Exception as e:
                 print("Gemini API warning:", e)
 

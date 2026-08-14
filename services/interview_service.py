@@ -62,21 +62,18 @@ class InterviewService:
         api_key = current_app.config.get("GEMINI_API_KEY")
         if api_key:
             try:
-                import google.generativeai as genai
-                genai.configure(api_key=api_key)
-                model = genai.GenerativeModel("gemini-1.5-flash")
+                from ai.gemini_client import GeminiClient
+                client = GeminiClient(api_key=api_key)
                 prompt = (
                     f"Generate 3 technical interview questions, 2 behavioral questions, and 1 coding challenge "
                     f"for a candidate applying for the role of '{target_role}' at '{difficulty}' difficulty. "
                     f"Return the response in valid JSON with keys: technical, behavioral, coding."
                 )
-                res = model.generate_content(prompt)
-                if res and res.text:
-                    parsed = json.loads(res.text.strip())
-                    if isinstance(parsed, dict):
-                        questions["technical"] = parsed.get("technical", questions["technical"])
-                        questions["behavioral"] = parsed.get("behavioral", questions["behavioral"])
-                        questions["coding"] = parsed.get("coding", questions["coding"])
+                parsed = client.generate_json(prompt=prompt)
+                if parsed and isinstance(parsed, dict):
+                    questions["technical"] = parsed.get("technical", questions["technical"])
+                    questions["behavioral"] = parsed.get("behavioral", questions["behavioral"])
+                    questions["coding"] = parsed.get("coding", questions["coding"])
             except Exception as e:
                 print("Gemini Interview Question Gen warning:", e)
 
@@ -102,18 +99,17 @@ class InterviewService:
         api_key = current_app.config.get("GEMINI_API_KEY")
         if api_key:
             try:
-                import google.generativeai as genai
-                genai.configure(api_key=api_key)
-                model = genai.GenerativeModel("gemini-1.5-flash")
+                from ai.gemini_client import GeminiClient
+                client = GeminiClient(api_key=api_key)
                 prompt = (
                     f"Evaluate this interview answer:\n"
                     f"Question: {question}\n"
                     f"Candidate Answer: {answer}\n\n"
                     f"Provide a score out of 100, key strengths, and areas for improvement."
                 )
-                res = model.generate_content(prompt)
-                if res and res.text:
-                    feedback = res.text.strip()
+                ai_feedback = client.generate_text(prompt=prompt)
+                if ai_feedback:
+                    feedback = ai_feedback
                     score = 85
             except Exception as e:
                 print("Gemini Answer Evaluation warning:", e)

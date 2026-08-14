@@ -53,21 +53,19 @@ class ChatbotService:
         }
         display_model = model_names.get(model, model)
 
-        # 1. Attempt Gemini API Generation if key available
+        # 1. Attempt Gemini API Generation using GeminiClient wrapper
         if api_key and api_key != "your_gemini_api_key_here":
             try:
-                import google.generativeai as genai
-                genai.configure(api_key=api_key)
-                genai_model = genai.GenerativeModel("gemini-1.5-flash")
-
+                from ai.gemini_client import GeminiClient
+                client = GeminiClient(api_key=api_key)
                 system_prompt = get_persona_prompt(persona)
                 if context:
                     system_prompt += f"\n\nContext & Knowledge Base:\n{context}\n"
 
-                prompt = f"{system_prompt}\nCandidate Model Selected: {display_model}\nUser Query: {q_clean}"
-                response = genai_model.generate_content(prompt)
-                if response and response.text:
-                    reply = response.text.strip()
+                prompt = f"Candidate Model Selected: {display_model}\nUser Query: {q_clean}"
+                ai_reply = client.generate_text(prompt=prompt, system_instruction=system_prompt)
+                if ai_reply:
+                    reply = ai_reply
                     tokens_used = len(prompt.split()) + len(reply.split())
             except Exception as err:
                 print(f"Chatbot Gemini API call failed, switching to intelligent fallback: {err}")

@@ -66,16 +66,15 @@ class CoverLetterService:
         api_key = current_app.config.get("GEMINI_API_KEY")
         if api_key:
             try:
-                import google.generativeai as genai
-                genai.configure(api_key=api_key)
-                model = genai.GenerativeModel("gemini-1.5-flash")
+                from ai.gemini_client import GeminiClient
+                client = GeminiClient(api_key=api_key)
                 prompt = (
                     f"Write a {tone.lower()} 3-paragraph cover letter for a candidate applying for the role of '{job_title}' "
                     f"at company '{company_name}'. Tone style: {tone}. Candidate skills: {skills}. Job description: {job_description[:500]}."
                 )
-                res = model.generate_content(prompt)
-                if res and res.text:
-                    cover_letter = res.text.strip()
+                ai_cover_letter = client.generate_text(prompt=prompt)
+                if ai_cover_letter:
+                    cover_letter = ai_cover_letter
             except Exception as err:
                 print("Gemini Cover Letter warning:", err)
 

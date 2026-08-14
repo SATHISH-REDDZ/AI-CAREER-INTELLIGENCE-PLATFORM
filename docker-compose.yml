@@ -8,9 +8,13 @@ services:
     ports:
       - "5000:5000"
     environment:
-      - SECRET_KEY=production_secret_key_change_me
-      - JWT_SECRET_KEY=production_jwt_secret_key_change_me_32bytes
-      - LOG_LEVEL=INFO
+      - SECRET_KEY=${SECRET_KEY}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - DATABASE_URL=${DATABASE_URL}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - GEMINI_MODEL=${GEMINI_MODEL:-gemini-2.5-flash}
+      - CORS_ORIGINS=${CORS_ORIGINS:-*}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
       - UPLOAD_FOLDER=uploads/resumes
     volumes:
       - ./uploads:/app/uploads
