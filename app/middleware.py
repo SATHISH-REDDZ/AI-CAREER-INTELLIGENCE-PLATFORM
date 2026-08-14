@@ -14,10 +14,21 @@ import time
 from flask import Flask, g, request
 
 
+from werkzeug.middleware.proxy_fix import ProxyFix
+
+
 def register_middleware(app: Flask) -> None:
     """
-    Register application middleware.
+    Register application middleware & reverse proxy HTTPS support.
     """
+    # HTTPS Proxy Header Fix for reverse proxies (Render, Cloud Run, Nginx)
+    app.wsgi_app = ProxyFix(
+        app.wsgi_app,
+        x_for=1,
+        x_proto=1,
+        x_host=1,
+        x_prefix=1
+    )
 
     @app.before_request
     def before_request():
