@@ -72,6 +72,8 @@ class Config:
         "change_this_secret_key"
     )
 
+    CORS_ORIGINS = get_env("CORS_ORIGINS", "*")
+
     DEBUG = get_env("DEBUG", False, cast=bool)
     TESTING = get_env("TESTING", False, cast=bool)
 

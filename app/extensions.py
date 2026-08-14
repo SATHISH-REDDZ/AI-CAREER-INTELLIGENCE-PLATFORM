@@ -65,7 +65,11 @@ def initialize_extensions(app):
         except Exception:
             return None
 
+    origins = app.config.get("CORS_ORIGINS", "*")
+    if isinstance(origins, str) and "," in origins:
+        origins = [o.strip() for o in origins.split(",")]
+
     cors.init_app(
         app,
-        resources={r"/*": {"origins": "*"}}
+        resources={r"/*": {"origins": origins}}
     )

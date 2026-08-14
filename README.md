@@ -1,11 +1,11 @@
 # AI Career Intelligence Platform 🚀
 
-[![CI Pipeline](https://github.com/user/ai-career-platform/actions/workflows/ci.yml/badge.svg)](https://github.com/user/ai-career-platform/actions/workflows/ci.yml)
-[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/)
+[![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/)
 [![Flask Framework](https://img.shields.io/badge/framework-Flask-black.svg)](https://flask.palletsprojects.com/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![GenAI SDK](https://img.shields.io/badge/AI-Google_GenAI_SDK-orange.svg)](https://pypi.org/project/google-genai/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-> An enterprise-grade, production-ready AI-powered career intelligence platform designed to evaluate resumes, calculate 7-component ATS compatibility scores, generate personalized skill-gap roadmaps, match target job descriptions, provide real-time career coaching via RAG, perform AI mock interviews, and compose tailored executive cover letters.
+> A production-oriented AI-powered career intelligence platform built with Python 3.12, Flask, NLP, machine learning, FAISS vector RAG, and generative AI.
 
 ---
 
@@ -34,7 +34,7 @@
 ---
 
 ## 1. Project Overview
-The **AI Career Intelligence Platform** empowers job seekers and professionals with data-driven career optimization tools. By combining NLP text processing, 7-component weighted ATS scoring, TF-IDF RAG vector search, and Google Gemini LLMs, the platform turns unstructured resume files into actionable career advancement roadmaps.
+The **AI Career Intelligence Platform** empowers job seekers and professionals with data-driven career optimization tools. By combining NLP text processing, 7-component weighted ATS scoring, FAISS vector store search, and Google GenAI LLMs, the platform turns unstructured resume files into actionable career advancement roadmaps.
 
 ---
 
@@ -49,10 +49,10 @@ Job seekers face significant hurdles in today's recruitment landscape:
 ## 3. Solution
 Our platform provides an end-to-end intelligence suite:
 - **Resume Upload & Parsing**: Validates `.pdf` and `.docx` uploads and extracts structured contact info and sections.
-- **7-Component ATS Scoring**: Scores candidate compatibility across Skills, Keywords, Structure, Experience, Action Verbs, Education, and Formatting.
+- **7-Component ATS Scoring**: Scores candidate compatibility across Skills (35%), Keywords (20%), Structure (15%), Experience (10%), Verbs (10%), Education (5%), and Formatting (5%).
 - **AI Skill-Gap Roadmaps**: Generates progressive step-by-step learning roadmaps (*Beginner* → *Intermediate* → *Advanced* → *Cloud*).
 - **Custom Job Matching**: Compares candidate resumes against raw Job Descriptions (calculating skill overlap ✓ / ✗ and text similarity).
-- **RAG Career Chatbot**: Interactively answers career queries grounded in knowledge-base vector search and candidate profile context.
+- **FAISS RAG Career Chatbot**: Interactively answers career queries grounded in FAISS vector store search and candidate profile context.
 - **AI Mock Interview Preparation**: Generates role-specific question sets and evaluates candidate answers out of 100 with actionable feedback.
 - **Cover Letter Generator**: Generates customized cover letters in *Professional*, *Concise*, or *Technical* tone styles.
 
@@ -66,9 +66,9 @@ Our platform provides an end-to-end intelligence suite:
 | **Resume Upload Engine** | Multi-format PDF/DOCX parsing, MIME type checking, size validation, and `secure_filename` storage |
 | **NLP Skill Extraction** | Regex & tokenization engine extracting 40+ technical skills from resume text |
 | **7-Component ATS Score** | Weighted algorithm scoring Skills (35%), Keywords (20%), Structure (15%), Experience (10%), Verbs (10%), Education (5%), Formatting (5%) |
-| **AI Resume Analysis** | Gemini LLM analysis producing summaries, strengths, weaknesses, recommended roles, and salary ranges |
+| **AI Resume Analysis** | Google GenAI SDK integration producing summaries, strengths, weaknesses, recommended roles, and salary ranges |
 | **Custom Job Matching** | Compares candidate resume text directly against target Job Descriptions with skill overlap breakdown |
-| **RAG Career Coach** | Contextual chatbot backed by TF-IDF vector embeddings and similarity search |
+| **FAISS RAG Career Coach** | Contextual chatbot backed by FAISS vector embeddings and dense L2 similarity search |
 | **Mock Interview Suite** | Question generation and AI answer scoring with qualitative feedback |
 | **Cover Letter Generator** | Tone-customizable cover letter writer (*Professional*, *Concise*, *Technical*) |
 | **Interactive Dashboard** | Analytics overview showing ATS score history, skill match %, and quick action links |
@@ -100,12 +100,12 @@ Our platform provides an end-to-end intelligence suite:
                                   │
                                   ▼
                          ┌──────────────────┐
-                         │   AI / Gemini    │
+                         │   Google GenAI   │
                          └────────┬─────────┘
                                   │
                                   ▼
                          ┌──────────────────┐
-                         │       RAG        │
+                         │    FAISS RAG     │
                          │ Vector Retrieval │
                          └────────┬─────────┘
                                   │
@@ -120,12 +120,12 @@ Our platform provides an end-to-end intelligence suite:
 
 ## 6. Tech Stack
 
-- **Backend Framework**: Python 3.10+ / Flask 3.0
-- **Database**: SQLAlchemy 2.0 / SQLite (Dev) / PostgreSQL (Prod)
-- **Security & Auth**: Werkzeug Password Hashing / PyJWT / Flask-Cors
+- **Backend Framework**: Python 3.12 / Flask 3.0
+- **Database**: SQLAlchemy 2.0 / Flask-Migrate / SQLite (Dev) / PostgreSQL (Prod)
+- **Security & Auth**: Werkzeug Password Hashing / PyJWT / Flask-Cors / Werkzeug ProxyFix
 - **NLP & Parsing**: PyPDF2 / pdfplumber / python-docx / NLTK / Regex
 - **Machine Learning**: Scikit-Learn / NumPy / Pandas
-- **Generative AI & RAG**: Google Generative AI (`gemini-1.5-flash`) / LangChain / FAISS / TF-IDF Vector Store
+- **Generative AI & RAG**: Google GenAI SDK (`from google import genai`) / FAISS (`faiss-cpu`) / LangChain
 - **Production Web Server**: Gunicorn
 - **Containerization & CI/CD**: Docker / Docker Compose / GitHub Actions
 
@@ -146,7 +146,7 @@ AI-Career-Intelligence-Platform/
 ├── ml/                   # ML ATS scoring calculator, skill gap & career predictor
 ├── models/               # SQLAlchemy domain models (User, Resume, Job, Report, etc.)
 ├── nlp/                  # Section parser, skill extractor, keyword matcher, similarity engine
-├── rag/                  # RAG document loader, vector embeddings & retrieval index
+├── rag/                  # FAISS RAG document loader, vector embeddings & retrieval index
 ├── repositories/         # Database repositories (User, Resume, Chatbot, etc.)
 ├── routes/               # API Blueprint routes (Auth, Resume, Interview, Chatbot, etc.)
 ├── schemas/              # Input validation schemas
@@ -158,7 +158,7 @@ AI-Career-Intelligence-Platform/
 ├── utils/                # Password, JWT & file validation helpers
 ├── .env.example          # Environment variables template
 ├── .gitignore            # Git ignore rules
-├── Dockerfile            # Production Docker image build file
+├── Dockerfile            # Production Docker image build file (python:3.12-slim)
 ├── docker-compose.yml    # Docker Compose multi-service setup
 ├── Procfile              # Gunicorn deployment configuration
 ├── pytest.ini            # Pytest test configuration
@@ -172,17 +172,17 @@ AI-Career-Intelligence-Platform/
 ---
 
 ## 8. AI & ML Pipeline
-See detailed AI documentation in [`docs/ai-pipeline.md`](file:///c:/Users/sathi/OneDrive/Desktop/PROJECT'S/AI-CAREER-INTELLIGENCE-PLATFORM/docs/ai-pipeline.md).
+See detailed AI documentation in [`docs/ai-pipeline.md`](docs/ai-pipeline.md).
 
 ---
 
 ## 9. Database Architecture
-See database schema documentation in [`docs/database.md`](file:///c:/Users/sathi/OneDrive/Desktop/PROJECT'S/AI-CAREER-INTELLIGENCE-PLATFORM/docs/database.md).
+See database schema documentation in [`docs/database.md`](docs/database.md).
 
 ---
 
 ## 10. API Documentation
-See full REST API endpoints documentation in [`docs/api.md`](file:///c:/Users/sathi/OneDrive/Desktop/PROJECT'S/AI-CAREER-INTELLIGENCE-PLATFORM/docs/api.md).
+See full REST API endpoints documentation in [`docs/api.md`](docs/api.md).
 
 ---
 
@@ -193,7 +193,7 @@ See full REST API endpoints documentation in [`docs/api.md`](file:///c:/Users/sa
 git clone https://github.com/user/ai-career-platform.git
 cd ai-career-platform
 
-# 2. Create virtual environment
+# 2. Create virtual environment (Python 3.12)
 python -m venv .venv
 
 # 3. Activate virtual environment
@@ -223,6 +223,8 @@ SECRET_KEY=your_secret_key_here
 JWT_SECRET_KEY=your_jwt_secret_key_here
 DATABASE_URL=sqlite:///instance/career.db
 GEMINI_API_KEY=your_gemini_api_key_here
+GEMINI_MODEL=gemini-2.5-flash
+CORS_ORIGINS=*
 ```
 
 ---
@@ -278,7 +280,7 @@ python verify_platform.py
 ---
 
 ## 18. Deployment Guide
-See deployment procedures for Render, Railway, and Cloud Run in [`docs/deployment.md`](file:///c:/Users/sathi/OneDrive/Desktop/PROJECT'S/AI-CAREER-INTELLIGENCE-PLATFORM/docs/deployment.md).
+See deployment procedures for Render, Railway, and Cloud Run in [`docs/deployment.md`](docs/deployment.md).
 
 ---
 
@@ -290,4 +292,4 @@ See deployment procedures for Render, Railway, and Cloud Run in [`docs/deploymen
 ---
 
 ## 20. License
-Distributed under the MIT License. See [`LICENSE`](file:///c:/Users/sathi/OneDrive/Desktop/PROJECT'S/AI-CAREER-INTELLIGENCE-PLATFORM/LICENSE) for details.
+Distributed under the MIT License. See [`LICENSE`](LICENSE) for details.

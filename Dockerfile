@@ -1,5 +1,5 @@
-# Use official Python lightweight runtime image
-FROM python:3.10-slim
+# Use official Python 3.12 lightweight runtime image
+FROM python:3.12-slim
 
 # Prevent Python from writing .pyc files & enable unbuffered logs
 ENV PYTHONDONTWRITEBYTECODE=1
