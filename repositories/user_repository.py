@@ -37,7 +37,7 @@ class UserRepository:
         """
         Get user by ID.
         """
-        return User.query.get(user_id)
+        return db.session.get(User, user_id)
 
     @staticmethod
     def exists(email: str) -> bool:
