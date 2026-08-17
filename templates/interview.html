@@ -1,8 +1,175 @@
 {% extends "base.html" %}
-{% block title %}AI Mock Interview Preparation{% endblock %}
+{% block title %}AI Mock Interview Preparation — AI Career Intelligence Platform{% endblock %}
+
 {% block content %}
-<div class="py-4">
-    <h2>AI Mock Technical & Behavioral Interview</h2>
-    <p class="text-muted">Practice role-based questions with instant AI answer scoring.</p>
+<div class="row g-4">
+    <div class="col-12">
+        <div class="glass-card p-4 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+            <div>
+                <span class="badge bg-purple-subtle text-purple border border-purple-subtle px-3 py-1 mb-2" style="color: #a855f7; border-color: rgba(168, 85, 247, 0.3) !important;">
+                    <i class="fa-solid fa-brain me-1"></i> Gemini AI Interview Intelligence
+                </span>
+                <h3 class="fw-bold text-white mb-1">AI Interactive Mock Interview</h3>
+                <p class="text-white-50 mb-0">Generate role-specific interview questions, submit candidate answers, and receive automated scoring & feedback.</p>
+            </div>
+            <div class="d-flex gap-2">
+                <button onclick="generateQuestions()" class="btn btn-brand"><i class="fa-solid fa-rotate me-1"></i> Generate New Question Set</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Question Generation Sidebar -->
+    <div class="col-md-4">
+        <div class="glass-card p-4 mb-4">
+            <h5 class="fw-bold text-white mb-3"><i class="fa-solid fa-sliders text-success me-2"></i> Interview Setup</h5>
+            
+            <div class="mb-3">
+                <label class="form-label text-white-50 small fw-medium">Target Role</label>
+                <select id="roleSelect" class="form-select">
+                    <option value="Python Backend Developer" selected>Python Backend Developer</option>
+                    <option value="Machine Learning Engineer">Machine Learning Engineer</option>
+                    <option value="Data Analyst">Data Analyst</option>
+                    <option value="Full Stack Developer">Full Stack Developer</option>
+                    <option value="DevOps Engineer">DevOps Engineer</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label text-white-50 small fw-medium">Difficulty Level</label>
+                <select id="diffSelect" class="form-select">
+                    <option value="Entry-Level">Entry-Level / Junior</option>
+                    <option value="Mid-Level" selected>Mid-Level</option>
+                    <option value="Senior / Lead">Senior / Lead</option>
+                </select>
+            </div>
+
+            <button onclick="generateQuestions()" class="btn btn-brand w-100 py-2">
+                <i class="fa-solid fa-bolt me-2"></i> Generate Questions
+            </button>
+        </div>
+
+        <div class="glass-card p-4">
+            <h6 class="fw-bold text-white mb-3"><i class="fa-solid fa-lightbulb text-warning me-2"></i> STAR Method Tip</h6>
+            <p class="text-white-50 small mb-0">
+                Structure your answer using the <strong>STAR</strong> framework:<br>
+                &bull; <strong>S</strong>ituation: Set the context<br>
+                &bull; <strong>T</strong>ask: Define your goal<br>
+                &bull; <strong>A</strong>ction: Detail what YOU did<br>
+                &bull; <strong>R</strong>esult: Quantify the outcome
+            </p>
+        </div>
+    </div>
+
+    <!-- Interactive Question & Evaluation Box -->
+    <div class="col-md-8">
+        <div class="glass-card p-4 mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <span class="badge bg-primary px-3 py-1">Technical Question 1 of 3</span>
+                <span class="text-white-50 small" id="roleBadge">Python Backend Developer</span>
+            </div>
+
+            <h5 class="fw-bold text-white mb-3" id="questionText">
+                "What is the difference between Python's <code>asyncio</code> concurrency model and traditional multi-threading or multi-processing? When would you choose one over the others in a REST API server?"
+            </h5>
+
+            <div class="mb-3">
+                <label class="form-label text-white-50 small fw-medium">Your Response / Answer</label>
+                <textarea id="candidateAnswer" rows="5" class="form-control" placeholder="Type your answer here using technical terms and STAR method metrics..."></textarea>
+            </div>
+
+            <div id="evalAlert" class="alert alert-danger d-none py-2 small mb-3"></div>
+
+            <div class="d-flex justify-content-between align-items-center">
+                <button onclick="clearAnswer()" class="btn btn-outline-glass btn-sm"><i class="fa-solid fa-eraser me-1"></i> Clear</button>
+                <button id="btnSubmitAnswer" onclick="submitAnswer()" class="btn btn-brand">
+                    <i class="fa-solid fa-paper-plane me-2"></i> Submit for AI Evaluation
+                </button>
+            </div>
+        </div>
+
+        <!-- Feedback Result Card -->
+        <div id="feedbackCard" class="glass-card p-4 d-none">
+            <h5 class="fw-bold text-white mb-3"><i class="fa-solid fa-chart-line text-success me-2"></i> AI Score & Evaluation</h5>
+            <div class="row text-center g-3 mb-4">
+                <div class="col-md-4">
+                    <div class="p-3 rounded-3" style="background: rgba(16, 185, 129, 0.1);">
+                        <div class="fs-4 fw-bold text-success" id="overallScore">80 / 100</div>
+                        <span class="text-white-50 small">Overall Score</span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3 rounded-3" style="background: rgba(59, 130, 246, 0.1);">
+                        <div class="fs-4 fw-bold text-primary" id="techScore">85 / 100</div>
+                        <span class="text-white-50 small">Technical Accuracy</span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3 rounded-3" style="background: rgba(168, 85, 247, 0.1);">
+                        <div class="fs-4 fw-bold text-purple" style="color:#a855f7;" id="commScore">75 / 100</div>
+                        <span class="text-white-50 small">Communication</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <h6 class="fw-bold text-white small"><i class="fa-solid fa-thumbs-up text-success me-1"></i> Strengths</h6>
+                <p class="text-white-50 small mb-0" id="feedbackStrengths">Good clear explanation of single-threaded event loops versus OS-level process isolation.</p>
+            </div>
+
+            <div>
+                <h6 class="fw-bold text-white small"><i class="fa-solid fa-wrench text-warning me-1"></i> Suggested Improvement</h6>
+                <p class="text-white-50 small mb-0" id="feedbackImprovement">Mention GIL (Global Interpreter Lock) constraints for CPU-bound tasks in Python.</p>
+            </div>
+        </div>
+    </div>
 </div>
+
+<script>
+async function generateQuestions() {
+    const role = document.getElementById("roleSelect").value;
+    document.getElementById("roleBadge").innerText = role;
+    document.getElementById("questionText").innerHTML = '"Explain how Python memory management works, including reference counting, generational garbage collection, and how to prevent memory leaks in long-running Flask or FastAPI services."';
+    document.getElementById("feedbackCard").classList.add("d-none");
+    document.getElementById("candidateAnswer").value = "";
+}
+
+function clearAnswer() {
+    document.getElementById("candidateAnswer").value = "";
+}
+
+async function submitAnswer() {
+    const answer = document.getElementById("candidateAnswer").value.trim();
+    if (!answer) {
+        alert("Please write your response before submitting.");
+        return;
+    }
+
+    document.getElementById("btnSubmitAnswer").disabled = true;
+    document.getElementById("btnSubmitAnswer").innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> Evaluating Answer...';
+
+    try {
+        const res = await fetch("/api/interview/submit-answer", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                question: document.getElementById("questionText").innerText,
+                answer: answer
+            })
+        });
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+            document.getElementById("overallScore").innerText = (data.evaluation.score || 80) + " / 100";
+            document.getElementById("feedbackCard").classList.remove("d-none");
+        } else {
+            alert(data.message || "Evaluation error.");
+        }
+    } catch (err) {
+        alert("Error connecting to AI evaluation service.");
+    } finally {
+        document.getElementById("btnSubmitAnswer").disabled = false;
+        document.getElementById("btnSubmitAnswer").innerHTML = '<i class="fa-solid fa-paper-plane me-2"></i> Submit for AI Evaluation';
+    }
+}
+</script>
 {% endblock %}

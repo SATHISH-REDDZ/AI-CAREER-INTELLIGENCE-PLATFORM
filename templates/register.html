@@ -1,7 +1,88 @@
 {% extends "base.html" %}
-{% block title %}Create Account{% endblock %}
+{% block title %}Create Account — AI Career Intelligence Platform{% endblock %}
+
 {% block content %}
-<div class="py-4">
-    <h2>Create New Candidate Account</h2>
+<div class="d-flex justify-content-center align-items-center py-4">
+    <div style="max-width: 540px; width: 100%;">
+        <div class="glass-card p-4 p-md-5">
+            <div class="text-center mb-4">
+                <div style="width: 56px; height: 56px; background: linear-gradient(135deg, #a855f7, #3b82f6); border-radius: 14px;" class="d-inline-flex align-items-center justify-content-center mb-3">
+                    <i class="fa-solid fa-user-plus text-white fs-3"></i>
+                </div>
+                <h3 class="fw-bold text-white mb-1">Join AI Career Platform</h3>
+                <p class="text-white-50 small">Analyze resumes, match target jobs, & receive AI career roadmaps</p>
+            </div>
+
+            <form id="registerForm" onsubmit="handleRegister(event)">
+                <div class="form-group mb-3">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" id="full_name" class="form-control" placeholder="e.g. Alex Johnson" required>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" id="email" class="form-control" placeholder="name@example.com" required>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Password</label>
+                        <input type="password" id="password" class="form-control" placeholder="••••••••" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Career Target Level</label>
+                        <select id="role_type" class="form-select">
+                            <option value="student">Student / Intern</option>
+                            <option value="graduate" selected>Fresh Graduate</option>
+                            <option value="professional">Working Professional</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="registerAlert" class="alert alert-danger d-none py-2 small mb-3"></div>
+
+                <button type="submit" class="btn btn-brand btn-block py-2.5 mb-3">
+                    <i class="fa-solid fa-user-check me-2"></i> Register Account
+                </button>
+            </form>
+
+            <div class="text-center mt-3">
+                <span class="text-white-50 small">Already registered? </span>
+                <a href="/login" class="text-success fw-medium small text-decoration-none">Sign In</a>
+            </div>
+        </div>
+    </div>
 </div>
+
+<script>
+async function handleRegister(e) {
+    e.preventDefault();
+    const alertBox = document.getElementById("registerAlert");
+    alertBox.classList.add("d-none");
+
+    const full_name = document.getElementById("full_name").value;
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    try {
+        const res = await fetch("/api/auth/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ full_name, email, password })
+        });
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+            alert("Registration successful! Redirecting to login...");
+            window.location.href = "/login";
+        } else {
+            alertBox.innerText = data.message || "Registration failed.";
+            alertBox.classList.remove("d-none");
+        }
+    } catch (err) {
+        alertBox.innerText = "Network error. Please try again.";
+        alertBox.classList.remove("d-none");
+    }
+}
+</script>
 {% endblock %}

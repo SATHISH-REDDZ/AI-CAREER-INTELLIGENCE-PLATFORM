@@ -1,7 +1,82 @@
 {% extends "base.html" %}
-{% block title %}Sign In{% endblock %}
+{% block title %}Sign In — AI Career Intelligence Platform{% endblock %}
+
 {% block content %}
-<div class="py-4">
-    <h2>Account Sign In</h2>
+<div class="d-flex justify-content-center align-items-center py-4">
+    <div style="max-width: 480px; width: 100%;">
+        <div class="glass-card p-4 p-md-5">
+            <div class="text-center mb-4">
+                <div style="width: 54px; height: 54px; background: linear-gradient(135deg, #10b981, #3b82f6); border-radius: 14px;" class="d-inline-flex align-items-center justify-content-center mb-3">
+                    <i class="fa-solid fa-user-lock text-white fs-3"></i>
+                </div>
+                <h3 class="fw-bold text-white mb-1">Welcome Back</h3>
+                <p class="text-white-50 small">Sign in to access AI Resume Intelligence & Career Analytics</p>
+            </div>
+
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group mb-3">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" id="email" class="form-control" placeholder="name@example.com" required value="alex.johnson@example.com">
+                </div>
+
+                <div class="form-group mb-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <label class="form-label">Password</label>
+                        <a href="#" class="text-success small text-decoration-none">Forgot?</a>
+                    </div>
+                    <input type="password" id="password" class="form-control" placeholder="••••••••" required value="user123">
+                </div>
+
+                <div id="loginAlert" class="alert alert-danger d-none py-2 small mb-3"></div>
+
+                <button type="submit" class="btn btn-brand btn-block py-2.5 mb-3">
+                    <i class="fa-solid fa-right-to-bracket me-2"></i> Sign In to Platform
+                </button>
+            </form>
+
+            <div class="p-3 rounded-3 mt-3" style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.2);">
+                <div class="fw-bold text-success small mb-1"><i class="fa-solid fa-lightbulb me-1"></i> Quick Demo Accounts</div>
+                <div class="text-white-50 small">
+                    <strong>User:</strong> alex.johnson@example.com / <code>user123</code><br>
+                    <strong>Admin:</strong> admin@careerai.com / <code>admin123</code>
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                <span class="text-white-50 small">Don't have an account? </span>
+                <a href="/register" class="text-success fw-medium small text-decoration-none">Create Account</a>
+            </div>
+        </div>
+    </div>
 </div>
+
+<script>
+async function handleLogin(e) {
+    e.preventDefault();
+    const alertBox = document.getElementById("loginAlert");
+    alertBox.classList.add("d-none");
+    
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    try {
+        const res = await fetch("/api/auth/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+            window.location.href = "/dashboard";
+        } else {
+            alertBox.innerText = data.message || "Invalid credentials provided.";
+            alertBox.classList.remove("d-none");
+        }
+    } catch (err) {
+        alertBox.innerText = "Network error. Please try again.";
+        alertBox.classList.remove("d-none");
+    }
+}
+</script>
 {% endblock %}

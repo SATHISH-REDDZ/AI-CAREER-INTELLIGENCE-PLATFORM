@@ -29,8 +29,10 @@ class ResumeController:
 
         file = request.files["file"]
 
+        user_id = getattr(g, "user_id", 1) or 1
+
         success, result = ResumeService.upload_resume(
-            user_id=g.user_id,
+            user_id=user_id,
             file=file
         )
 

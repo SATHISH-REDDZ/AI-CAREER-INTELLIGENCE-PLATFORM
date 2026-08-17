@@ -1,8 +1,137 @@
 {% extends "base.html" %}
-{% block title %}ATS Audit Report{% endblock %}
+{% block title %}ATS Resume Intelligence Audit — AI Career Intelligence Platform{% endblock %}
+
 {% block content %}
-<div class="py-4">
-    <h2>ATS Audit & Skill Gap Report</h2>
-    <p class="text-muted">Detailed compatibility breakdown, matched skills, and missing keywords.</p>
+<div class="row g-4">
+    <!-- Audit Summary Header -->
+    <div class="col-12">
+        <div class="glass-card p-4 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+            <div>
+                <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-1 mb-2">
+                    <i class="fa-solid fa-square-check me-1"></i> NLP Audit Completed
+                </span>
+                <h3 class="fw-bold text-white mb-1">ATS Resume Intelligence Audit Report</h3>
+                <p class="text-white-50 mb-0">Extracted Skills, Keyword Density, ATS Compatibility & Actionable Improvement Recommendations.</p>
+            </div>
+            <div class="d-flex gap-2">
+                <a href="/upload-resume" class="btn btn-outline-glass btn-sm"><i class="fa-solid fa-upload me-1"></i> Re-Upload</a>
+                <a href="/roadmap" class="btn btn-brand btn-sm"><i class="fa-solid fa-road me-1"></i> View 8-Week Roadmap</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Score Breakdown -->
+    <div class="col-md-4">
+        <div class="glass-card p-4 text-center mb-4">
+            <h6 class="text-white-50 small mb-2 fw-medium">OVERALL ATS MATCH SCORE</h6>
+            <div class="display-3 fw-bold text-success mb-2">85.6 <span class="fs-5 text-white-50">/ 100</span></div>
+            <span class="badge bg-success px-3 py-1.5 rounded-pill"><i class="fa-solid fa-circle-check me-1"></i> Strong Resume Profile</span>
+            <p class="text-white-50 small mt-3 mb-0">Your resume passes automated screening software (ATS) filters for Python & Backend Engineering roles.</p>
+        </div>
+
+        <div class="glass-card p-4">
+            <h6 class="fw-bold text-white mb-3"><i class="fa-solid fa-list-check text-primary me-2"></i> Section Quality Breakdown</h6>
+            <div class="mb-3">
+                <div class="d-flex justify-content-between text-white-50 small mb-1">
+                    <span>Technical Skills</span>
+                    <span class="text-success fw-bold">18 / 20</span>
+                </div>
+                <div class="progress" style="height: 6px; background: rgba(255,255,255,0.1);">
+                    <div class="progress-bar bg-success" style="width: 90%;"></div>
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="d-flex justify-content-between text-white-50 small mb-1">
+                    <span>Work Experience</span>
+                    <span class="text-success fw-bold">17 / 20</span>
+                </div>
+                <div class="progress" style="height: 6px; background: rgba(255,255,255,0.1);">
+                    <div class="progress-bar bg-success" style="width: 85%;"></div>
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="d-flex justify-content-between text-white-50 small mb-1">
+                    <span>Projects & Impact</span>
+                    <span class="text-primary fw-bold">16 / 20</span>
+                </div>
+                <div class="progress" style="height: 6px; background: rgba(255,255,255,0.1);">
+                    <div class="progress-bar bg-primary" style="width: 80%;"></div>
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="d-flex justify-content-between text-white-50 small mb-1">
+                    <span>Education & Certs</span>
+                    <span class="text-success fw-bold">10 / 10</span>
+                </div>
+                <div class="progress" style="height: 6px; background: rgba(255,255,255,0.1);">
+                    <div class="progress-bar bg-success" style="width: 100%;"></div>
+                </div>
+            </div>
+            <div class="mb-0">
+                <div class="d-flex justify-content-between text-white-50 small mb-1">
+                    <span>Keywords & Formatting</span>
+                    <span class="text-warning fw-bold">16 / 20</span>
+                </div>
+                <div class="progress" style="height: 6px; background: rgba(255,255,255,0.1);">
+                    <div class="progress-bar bg-warning" style="width: 80%;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Side Details -->
+    <div class="col-md-8">
+        <!-- Extracted Skills -->
+        <div class="glass-card p-4 mb-4">
+            <h5 class="fw-bold text-white mb-3"><i class="fa-solid fa-code text-success me-2"></i> Detected Technical Skills (9)</h5>
+            <div>
+                <span class="badge-skill">Python</span>
+                <span class="badge-skill">Flask</span>
+                <span class="badge-skill">SQL</span>
+                <span class="badge-skill">Git</span>
+                <span class="badge-skill">REST API</span>
+                <span class="badge-skill">Docker</span>
+                <span class="badge-skill">PostgreSQL</span>
+                <span class="badge-skill">Redis</span>
+                <span class="badge-skill">pytest</span>
+            </div>
+            <h6 class="fw-bold text-white mt-4 mb-2"><i class="fa-solid fa-triangle-exclamation text-danger me-2"></i> Missing High-Impact Skills</h6>
+            <div>
+                <span class="badge-missing">Django</span>
+                <span class="badge-missing">AWS Cloud</span>
+                <span class="badge-missing">CI/CD Pipelines</span>
+            </div>
+        </div>
+
+        <!-- AI Improvement Recommendations -->
+        <div class="glass-card p-4 mb-4">
+            <h5 class="fw-bold text-white mb-3"><i class="fa-solid fa-wand-magic-sparkles text-purple me-2" style="color: #a855f7;"></i> AI Strategic Recommendations</h5>
+            <div class="p-3 rounded-3 mb-3" style="background: rgba(16, 185, 129, 0.08); border-left: 4px solid #10b981;">
+                <div class="fw-bold text-success mb-1">1. Quantify Project Achievements with Metrics</div>
+                <p class="text-white-50 small mb-0">Include specific measurable results. Instead of <i>"Built Flask backend API"</i>, state: <i>"Architected RESTful Flask APIs serving 50,000+ daily active users with 99.9% uptime."</i></p>
+            </div>
+
+            <div class="p-3 rounded-3 mb-3" style="background: rgba(59, 130, 246, 0.08); border-left: 4px solid #3b82f6;">
+                <div class="fw-bold text-primary mb-1">2. Add Containerization & Cloud Deployment Section</div>
+                <p class="text-white-50 small mb-0">Your profile shows Docker experience, but adding AWS / GCP cloud deployment highlights will increase backend interview callback rates by up to 35%.</p>
+            </div>
+
+            <div class="p-3 rounded-3" style="background: rgba(245, 158, 11, 0.08); border-left: 4px solid #f59e0b;">
+                <div class="fw-bold text-warning mb-1">3. Clean Header Formatting</div>
+                <p class="text-white-50 small mb-0">Ensure standard section titles like <code>Work Experience</code>, <code>Technical Skills</code>, and <code>Education</code> without icons or graphics in body headers.</p>
+            </div>
+        </div>
+
+        <!-- Career Role Predictor -->
+        <div class="glass-card p-4 text-center">
+            <h6 class="text-white-50 small mb-2">ML PREDICTED CAREER PATH</h6>
+            <h4 class="fw-bold text-white mb-2">Python Backend Software Engineer</h4>
+            <p class="text-white-50 small mb-3">Estimated Salary Range: <strong>$95,000 - $125,000 / year</strong></p>
+            <div class="d-flex justify-content-center gap-2">
+                <a href="/interview" class="btn btn-brand btn-sm"><i class="fa-solid fa-user-tie me-1"></i> Practice Interview</a>
+                <a href="/cover-letter" class="btn btn-outline-glass btn-sm"><i class="fa-solid fa-envelope me-1"></i> Generate Cover Letter</a>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

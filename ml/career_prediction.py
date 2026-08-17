@@ -56,3 +56,8 @@ class CareerPredictor:
 
         results.sort(key=lambda x: x["match_percentage"], reverse=True)
         return results
+
+
+# Backward compatibility alias
+CareerPredictionEngine = CareerPredictor
+

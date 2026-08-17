@@ -54,9 +54,14 @@ class AuthController:
         )
 
         if success:
+            from flask import session
+            user_dict = result.get("user")
+            if user_dict and isinstance(user_dict, dict):
+                session["user_id"] = user_dict.get("id")
             return jsonify({
                 "success": True,
-                "token": result["token"]
+                "token": result.get("token"),
+                "user": user_dict
             }), 200
 
         return jsonify({

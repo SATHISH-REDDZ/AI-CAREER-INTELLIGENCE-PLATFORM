@@ -1,8 +1,115 @@
 {% extends "base.html" %}
-{% block title %}Executive Cover Letter Generator{% endblock %}
+{% block title %}Tailored AI Cover Letter Generator — AI Career Intelligence Platform{% endblock %}
+
 {% block content %}
-<div class="py-4">
-    <h2>Generate Tailored Cover Letters</h2>
-    <p class="text-muted">Create application letters matched to target job descriptions.</p>
+<div class="row g-4">
+    <div class="col-12">
+        <div class="glass-card p-4 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+            <div>
+                <span class="badge bg-warning-subtle text-warning border border-warning-subtle px-3 py-1 mb-2">
+                    <i class="fa-solid fa-pen-nib me-1"></i> Gemini Generative AI Writer
+                </span>
+                <h3 class="fw-bold text-white mb-1">Tailored Cover Letter Generator</h3>
+                <p class="text-white-50 mb-0">Generate persuasive, professional cover letters aligned with your resume experience and target job requirements.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Left Controls Form -->
+    <div class="col-md-5">
+        <div class="glass-card p-4">
+            <h5 class="fw-bold text-white mb-3"><i class="fa-solid fa-sliders text-success me-2"></i> Customization Inputs</h5>
+            
+            <div class="mb-3">
+                <label class="form-label text-white-50 small fw-medium">Target Company Name</label>
+                <input type="text" id="companyName" class="form-control" placeholder="e.g. TechScale Solutions" value="TechScale Solutions">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label text-white-50 small fw-medium">Target Job Role</label>
+                <input type="text" id="jobRole" class="form-control" placeholder="e.g. Python Backend Developer" value="Python Backend Developer">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label text-white-50 small fw-medium">Key Highlights to Emphasize</label>
+                <textarea id="highlights" rows="3" class="form-control" placeholder="e.g. 3 years Python, Flask API development, Docker, microservices..."></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label text-white-50 small fw-medium">Tone of Voice</label>
+                <select id="tone" class="form-select">
+                    <option value="Professional & High Impact" selected>Professional & High Impact</option>
+                    <option value="Enthusiastic & Modern">Enthusiastic & Startup</option>
+                    <option value="Executive & Strategic">Executive & Strategic</option>
+                </select>
+            </div>
+
+            <button id="btnGenerateLetter" onclick="generateLetter()" class="btn btn-brand w-100 py-2.5">
+                <i class="fa-solid fa-wand-magic-sparkles me-2"></i> Generate Cover Letter
+            </button>
+        </div>
+    </div>
+
+    <!-- Right Generated Cover Letter Container -->
+    <div class="col-md-7">
+        <div class="glass-card p-4 h-100 d-flex flex-column">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold text-white mb-0"><i class="fa-solid fa-file-contract text-warning me-2"></i> Generated Output</h5>
+                <button onclick="copyLetter()" class="btn btn-outline-glass btn-sm"><i class="fa-solid fa-copy me-1"></i> Copy Text</button>
+            </div>
+
+            <div id="letterOutput" class="p-4 rounded-3 text-white-50 flex-grow-1" style="background: rgba(0,0,0,0.25); white-space: pre-wrap; font-family: 'Inter', sans-serif; line-height: 1.7;">
+Dear Hiring Manager at TechScale Solutions,
+
+I am writing to express my strong enthusiasm for the Python Backend Developer position. With extensive hands-on experience developing scalable RESTful web services in Python and Flask, coupled with automated testing using pytest and containerization via Docker, I am eager to contribute to your engineering team.
+
+In my recent work, I architected modular backend microservices that optimized database queries in PostgreSQL, achieving a 30% reduction in response latency for high-volume REST API endpoints. My technical stack includes Python, SQL, Git, Docker, and Redis caching.
+
+I am particularly drawn to TechScale Solutions' innovative product vision. I look forward to discussing how my backend software engineering skills align with your upcoming technical milestones.
+
+Sincerely,
+Alex Johnson
+            </div>
+        </div>
+    </div>
 </div>
+
+<script>
+async function generateLetter() {
+    const company = document.getElementById("companyName").value;
+    const role = document.getElementById("jobRole").value;
+    const highlights = document.getElementById("highlights").value;
+    const tone = document.getElementById("tone").value;
+
+    const btn = document.getElementById("btnGenerateLetter");
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> Generating Letter...';
+
+    try {
+        const res = await fetch("/api/cover-letter/generate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ company_name: company, job_role: role, highlights, tone })
+        });
+        const data = await res.json();
+
+        if (res.ok && data.success && data.cover_letter) {
+            document.getElementById("letterOutput").innerText = data.cover_letter;
+        } else if (data.letter) {
+            document.getElementById("letterOutput").innerText = data.letter;
+        }
+    } catch (err) {
+        alert("Error generating cover letter.");
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles me-2"></i> Generate Cover Letter';
+    }
+}
+
+function copyLetter() {
+    const text = document.getElementById("letterOutput").innerText;
+    navigator.clipboard.writeText(text);
+    alert("Cover letter copied to clipboard!");
+}
+</script>
 {% endblock %}

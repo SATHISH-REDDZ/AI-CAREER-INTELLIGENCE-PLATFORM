@@ -1,8 +1,106 @@
 {% extends "base.html" %}
-{% block title %}Upload Resume{% endblock %}
+{% block title %}Upload & Analyze Resume — AI Career Intelligence Platform{% endblock %}
+
 {% block content %}
-<div class="py-4">
-    <h2>Upload Candidate Resume</h2>
-    <p class="text-muted">Upload PDF or DOCX file for automatic text extraction & ATS parsing.</p>
+<div class="row justify-content-center py-4">
+    <div class="col-md-8 col-lg-7">
+        <div class="glass-card p-4 p-md-5">
+            <div class="text-center mb-4">
+                <div style="width: 54px; height: 54px; background: linear-gradient(135deg, #10b981, #059669); border-radius: 14px;" class="d-inline-flex align-items-center justify-content-center mb-3">
+                    <i class="fa-solid fa-cloud-arrow-up text-white fs-3"></i>
+                </div>
+                <h3 class="fw-bold text-white mb-1">Upload Resume for AI Audit</h3>
+                <p class="text-white-50 small">Extract skills, calculate ATS score, detect missing sections & run job matching</p>
+            </div>
+
+            <form id="uploadForm" onsubmit="handleUpload(event)">
+                <div class="mb-4 text-center p-5 rounded-4 border-2 border-dashed" style="background: rgba(0,0,0,0.2); border-color: rgba(255,255,255,0.2) !important; cursor: pointer;" onclick="document.getElementById('resumeFile').click()">
+                    <i class="fa-solid fa-file-pdf fs-1 text-success mb-3"></i>
+                    <h6 class="fw-bold text-white mb-1">Click or drag & drop resume file</h6>
+                    <p class="text-white-50 small mb-0">Supports PDF & DOCX formats (Max 10MB)</p>
+                    <input type="file" id="resumeFile" accept=".pdf,.docx,.doc" class="d-none" onchange="displayFilename(this)">
+                </div>
+
+                <div id="fileInfo" class="alert alert-dark d-none py-2 text-white-50 small mb-3 align-items-center justify-content-between">
+                    <span id="filenameLabel">selected_resume.pdf</span>
+                    <button type="button" class="btn-close btn-close-white ms-2" onclick="clearFile()"></button>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label text-white-50 small fw-medium">Target Job Role (Optional)</label>
+                    <input type="text" id="targetRole" class="form-control" placeholder="e.g. Python Backend Developer, Data Analyst">
+                </div>
+
+                <div id="uploadAlert" class="alert alert-danger d-none py-2 small mb-3"></div>
+
+                <button type="submit" id="btnSubmit" class="btn btn-brand w-100 py-3 fw-bold">
+                    <i class="fa-solid fa-wand-magic-sparkles me-2"></i> Run AI Resume Audit
+                </button>
+            </form>
+
+            <div class="mt-4 pt-3 border-top border-secondary opacity-75">
+                <h6 class="fw-bold text-white small mb-2"><i class="fa-solid fa-shield-halved text-success me-1"></i> Privacy & Security Guarantee</h6>
+                <p class="text-white-50 small mb-0">Resumes are parsed securely using local spaCy NLP pipelines and stored encrypted. Your personal contact information is never shared.</p>
+            </div>
+        </div>
+    </div>
 </div>
+
+<script>
+function displayFilename(input) {
+    if (input.files && input.files[0]) {
+        document.getElementById("filenameLabel").innerText = input.files[0].name;
+        document.getElementById("fileInfo").classList.remove("d-none");
+        document.getElementById("fileInfo").classList.add("d-flex");
+    }
+}
+function clearFile() {
+    document.getElementById("resumeFile").value = "";
+    document.getElementById("fileInfo").classList.add("d-none");
+}
+async function handleUpload(e) {
+    e.preventDefault();
+    const alertBox = document.getElementById("uploadAlert");
+    const fileInput = document.getElementById("resumeFile");
+    const targetRole = document.getElementById("targetRole").value;
+
+    if (!fileInput.files || !fileInput.files[0]) {
+        alertBox.innerText = "Please select a PDF or DOCX file to upload.";
+        alertBox.classList.remove("d-none");
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", fileInput.files[0]);
+    if (targetRole) formData.append("target_role", targetRole);
+
+    document.getElementById("btnSubmit").disabled = true;
+    document.getElementById("btnSubmit").innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> Processing Resume NLP...';
+
+    try {
+        const res = await fetch("/api/resumes/upload", {
+            method: "POST",
+            body: formData
+        });
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+            window.location.href = "/ats?resume_id=" + (data.resume ? data.resume.id : 1);
+        } else if (res.status === 401) {
+            // Guest candidate fallback
+            window.location.href = "/ats";
+        } else {
+            alertBox.innerText = data.message || "Upload failed.";
+            alertBox.classList.remove("d-none");
+            document.getElementById("btnSubmit").disabled = false;
+            document.getElementById("btnSubmit").innerHTML = '<i class="fa-solid fa-wand-magic-sparkles me-2"></i> Run AI Resume Audit';
+        }
+    } catch (err) {
+        alertBox.innerText = "Error uploading file. Please try again.";
+        alertBox.classList.remove("d-none");
+        document.getElementById("btnSubmit").disabled = false;
+        document.getElementById("btnSubmit").innerHTML = '<i class="fa-solid fa-wand-magic-sparkles me-2"></i> Run AI Resume Audit';
+    }
+}
+</script>
 {% endblock %}

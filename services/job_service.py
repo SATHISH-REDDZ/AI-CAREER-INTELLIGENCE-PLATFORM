@@ -55,14 +55,41 @@ class JobService:
     def get_recommendations(user_skills: list) -> list:
         """
         Calculate match percentages and recommend jobs for user skills.
+        Pulls jobs from Database if available, falling back to mock dataset.
         """
-        user_skills_set = set(s.lower() for s in user_skills)
+        from models.job import Job
+        user_skills_set = set(s.strip().lower() for s in user_skills if s)
         recommendations = []
 
-        for job in MOCK_JOBS:
-            req_skills = job["skills_required"]
+        jobs_list = []
+        try:
+            db_jobs = Job.query.filter_by(is_active=True).all()
+            if db_jobs:
+                for db_j in db_jobs:
+                    req_list = [s.strip() for s in (db_j.required_skills or "").split(",") if s.strip()]
+                    jobs_list.append({
+                        "id": db_j.id,
+                        "title": db_j.title,
+                        "company": db_j.company,
+                        "location": db_j.location,
+                        "skills_required": req_list,
+                        "salary_range": db_j.salary or "$80,000 - $110,000",
+                        "job_type": db_j.employment_type or "Full-Time",
+                        "experience_level": db_j.experience_level or "Mid-Level",
+                        "application_url": db_j.application_url or "#"
+                    })
+        except Exception:
+            jobs_list = []
+
+        if not jobs_list:
+            jobs_list = MOCK_JOBS
+
+        for job in jobs_list:
+            req_skills = job.get("skills_required", [])
+            if not req_skills:
+                continue
             matches = [s for s in req_skills if s.lower() in user_skills_set]
-            match_percentage = round((len(matches) / len(req_skills)) * 100, 1)
+            match_percentage = round((len(matches) / len(req_skills)) * 100, 1) if req_skills else 0.0
 
             job_rec = dict(job)
             job_rec["match_percentage"] = match_percentage
@@ -73,3 +100,4 @@ class JobService:
         # Sort by highest match score
         recommendations.sort(key=lambda x: x["match_percentage"], reverse=True)
         return recommendations
+

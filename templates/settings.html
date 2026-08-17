@@ -1,7 +1,42 @@
 {% extends "base.html" %}
-{% block title %}Platform Settings{% endblock %}
+{% block title %}Account Settings — AI Career Intelligence Platform{% endblock %}
+
 {% block content %}
-<div class="py-4">
-    <h2>Application & API Key Settings</h2>
+<div class="d-flex justify-content-center py-4">
+    <div style="max-width: 680px; width: 100%;">
+        <div class="glass-card p-4 p-md-5">
+            <h3 class="fw-bold text-white mb-4"><i class="fa-solid fa-gear text-success me-2"></i> Account & System Settings</h3>
+
+            <div class="mb-4 pb-4 border-bottom border-secondary opacity-75">
+                <h5 class="fw-bold text-white mb-3">AI Model & Advisor Settings</h5>
+                <div class="form-group mb-3">
+                    <label class="form-label">Default AI Model</label>
+                    <select class="form-select">
+                        <option value="Gemini" selected>Google Gemini Pro (Recommended)</option>
+                        <option value="ChatGPT">OpenAI ChatGPT-4o</option>
+                        <option value="Claude">Anthropic Claude 3.5 Sonnet</option>
+                    </select>
+                </div>
+                <div class="form-check form-switch mb-2">
+                    <input class="form-check-input" type="checkbox" id="ragToggle" checked>
+                    <label class="form-check-label text-white small" for="ragToggle">Enable RAG FAISS Knowledge Base Context Injection</label>
+                </div>
+            </div>
+
+            <div class="mb-4 pb-4 border-bottom border-secondary opacity-75">
+                <h5 class="fw-bold text-white mb-3">Notification Preferences</h5>
+                <div class="form-check form-switch mb-2">
+                    <input class="form-check-input" type="checkbox" id="n1" checked>
+                    <label class="form-check-label text-white small" for="n1">Email notification on ATS resume analysis complete</label>
+                </div>
+                <div class="form-check form-switch mb-2">
+                    <input class="form-check-input" type="checkbox" id="n2" checked>
+                    <label class="form-check-label text-white small" for="n2">Weekly job matching digest alerts</label>
+                </div>
+            </div>
+
+            <button type="button" class="btn btn-brand" onclick="alert('Settings saved!')"><i class="fa-solid fa-check me-2"></i> Save Preferences</button>
+        </div>
+    </div>
 </div>
 {% endblock %}

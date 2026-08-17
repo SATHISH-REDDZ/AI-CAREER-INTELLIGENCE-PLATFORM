@@ -1,7 +1,31 @@
 {% extends "base.html" %}
-{% block title %}Export Reports{% endblock %}
+{% block title %}Export Career Intelligence Reports — AI Career Intelligence Platform{% endblock %}
+
 {% block content %}
-<div class="py-4">
-    <h2>Download Candidate PDF Reports</h2>
+<div class="row g-4">
+    <div class="col-12">
+        <div class="glass-card p-4 d-flex justify-content-between align-items-center">
+            <div>
+                <h3 class="fw-bold text-white mb-1"><i class="fa-solid fa-file-pdf text-danger me-2"></i> Career Reports & Documents</h3>
+                <p class="text-white-50 mb-0">Export PDF audits, skill gap reports, and generated cover letters.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="glass-card p-4">
+            <h5 class="fw-bold text-white mb-2"><i class="fa-solid fa-file-invoice text-success me-2"></i> Comprehensive ATS Audit PDF</h5>
+            <p class="text-white-50 small mb-3">Download complete 4-page breakdown of your resume ATS score, detected skills, keyword density, and AI suggestions.</p>
+            <a href="/ats" class="btn btn-brand btn-sm"><i class="fa-solid fa-download me-1"></i> Export ATS PDF</a>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="glass-card p-4">
+            <h5 class="fw-bold text-white mb-2"><i class="fa-solid fa-map text-primary me-2"></i> 8-Week Upskilling Roadmap PDF</h5>
+            <p class="text-white-50 small mb-3">Download phased milestone PDF plan to master missing skills for your target career role.</p>
+            <a href="/roadmap" class="btn btn-outline-glass btn-sm"><i class="fa-solid fa-download me-1"></i> Export Roadmap PDF</a>
+        </div>
+    </div>
 </div>
 {% endblock %}

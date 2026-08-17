@@ -1,8 +1,195 @@
 {% extends "base.html" %}
-{% block title %}Candidate Dashboard{% endblock %}
+{% block title %}Career Dashboard — AI Career Intelligence Platform{% endblock %}
+
 {% block content %}
-<div class="dashboard-header py-4">
-    <h2>Candidate Analytics & Career Performance</h2>
-    <p class="text-muted">Track resume scores, ATS compatibility, and interview metrics.</p>
+<div class="d-flex flex-column gap-4">
+    <!-- Top Welcome Header -->
+    <div class="glass-card p-4 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+        <div>
+            <span class="badge badge-pill badge-success mb-2">
+                <i class="fa-solid fa-bolt me-1"></i> AI Intelligence Active
+            </span>
+            <h2 class="fw-bold text-white mb-1">Career Command Center</h2>
+            <p class="text-white-50 mb-0">Overview of your ATS resume score, job matches, missing skills & interview readiness.</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="/upload-resume" class="btn btn-brand"><i class="fa-solid fa-cloud-arrow-up me-2"></i> Audit Resume</a>
+            <a href="/chatbot" class="btn btn-outline-glass"><i class="fa-solid fa-robot me-2"></i> Launch Chatbot</a>
+        </div>
+    </div>
+
+    <!-- Metric Cards -->
+    <div class="row g-3">
+        <div class="col-md-3">
+            <div class="glass-card p-4 text-center h-100">
+                <div class="text-success mb-2"><i class="fa-solid fa-file-invoice fs-2"></i></div>
+                <h3 class="fw-bold text-white mb-0" id="statScore">85.6 <small class="fs-6 text-white-50">/ 100</small></h3>
+                <span class="text-white-50 small">ATS Resume Score</span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="glass-card p-4 text-center h-100">
+                <div class="text-primary mb-2"><i class="fa-solid fa-briefcase fs-2"></i></div>
+                <h3 class="fw-bold text-white mb-0" id="statRole">Backend Developer</h3>
+                <span class="text-white-50 small">Top Matched Role</span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="glass-card p-4 text-center h-100">
+                <div class="text-warning mb-2"><i class="fa-solid fa-triangle-exclamation fs-2"></i></div>
+                <h3 class="fw-bold text-white mb-0" id="statGap">3 Skills</h3>
+                <span class="text-white-50 small">Missing for 90%+ Match</span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="glass-card p-4 text-center h-100">
+                <div style="color: #a855f7;" class="mb-2"><i class="fa-solid fa-money-bill-trend-up fs-2"></i></div>
+                <h3 class="fw-bold text-white mb-0">$95k - $125k</h3>
+                <span class="text-white-50 small">Estimated Salary Range</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Core Actions & Jobs Grid -->
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="glass-card p-4 mb-4">
+                <h5 class="fw-bold text-white mb-3"><i class="fa-solid fa-wand-magic-sparkles text-success me-2"></i> AI Career Intelligence Services</h5>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <a href="/ats" class="glass-card p-3 d-flex align-items-center gap-3 text-decoration-none text-white h-100" style="background: rgba(0,0,0,0.25);">
+                            <div style="width: 44px; height: 44px; background: rgba(16, 185, 129, 0.15); border-radius: 10px; flex-shrink: 0;" class="d-flex align-items-center justify-content-center text-success fs-4">
+                                <i class="fa-solid fa-file-shield"></i>
+                            </div>
+                            <div>
+                                <div class="fw-bold">ATS Resume Audit</div>
+                                <div class="text-white-50 small">Extract skills & section weakness</div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="/interview" class="glass-card p-3 d-flex align-items-center gap-3 text-decoration-none text-white h-100" style="background: rgba(0,0,0,0.25);">
+                            <div style="width: 44px; height: 44px; background: rgba(168, 85, 247, 0.15); border-radius: 10px; flex-shrink: 0;" class="d-flex align-items-center justify-content-center fs-4" style="color: #a855f7;">
+                                <i class="fa-solid fa-user-tie"></i>
+                            </div>
+                            <div>
+                                <div class="fw-bold">AI Mock Interview</div>
+                                <div class="text-white-50 small">Practice questions & scoring</div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="/roadmap" class="glass-card p-3 d-flex align-items-center gap-3 text-decoration-none text-white h-100" style="background: rgba(0,0,0,0.25);">
+                            <div style="width: 44px; height: 44px; background: rgba(59, 130, 246, 0.15); border-radius: 10px; flex-shrink: 0;" class="d-flex align-items-center justify-content-center text-primary fs-4">
+                                <i class="fa-solid fa-road"></i>
+                            </div>
+                            <div>
+                                <div class="fw-bold">8-Week Tech Roadmap</div>
+                                <div class="text-white-50 small">Phased upskilling milestones</div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="/cover-letter" class="glass-card p-3 d-flex align-items-center gap-3 text-decoration-none text-white h-100" style="background: rgba(0,0,0,0.25);">
+                            <div style="width: 44px; height: 44px; background: rgba(245, 158, 11, 0.15); border-radius: 10px; flex-shrink: 0;" class="d-flex align-items-center justify-content-center text-warning fs-4">
+                                <i class="fa-solid fa-envelope-open-text"></i>
+                            </div>
+                            <div>
+                                <div class="fw-bold">Tailored Cover Letter</div>
+                                <div class="text-white-50 small">Generate job-specific letters</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Matched Job Roles -->
+            <div class="glass-card p-4">
+                <h5 class="fw-bold text-white mb-3"><i class="fa-solid fa-briefcase text-primary me-2"></i> Recommended Job Opportunities</h5>
+                <div id="jobRecList" class="d-flex flex-column gap-3">
+                    <div class="p-3 rounded-3" style="background: rgba(0, 0, 0, 0.25); border: 1px solid rgba(255, 255, 255, 0.08);">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h6 class="fw-bold text-white mb-1">Python Backend Developer</h6>
+                                <span class="text-white-50 small">TechScale Solutions &bull; Remote / Hybrid</span>
+                            </div>
+                            <span class="badge badge-pill badge-success">91% Match</span>
+                        </div>
+                        <div class="mt-2">
+                            <span class="badge-skill">Python</span>
+                            <span class="badge-skill">Flask</span>
+                            <span class="badge-skill">PostgreSQL</span>
+                            <span class="badge-skill">Docker</span>
+                            <span class="badge-missing">Django</span>
+                        </div>
+                    </div>
+                    <div class="p-3 rounded-3" style="background: rgba(0, 0, 0, 0.25); border: 1px solid rgba(255, 255, 255, 0.08);">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h6 class="fw-bold text-white mb-1">Machine Learning Engineer</h6>
+                                <span class="text-white-50 small">Cognitive AI Labs &bull; San Francisco, CA</span>
+                            </div>
+                            <span class="badge badge-pill badge-primary">84% Match</span>
+                        </div>
+                        <div class="mt-2">
+                            <span class="badge-skill">Python</span>
+                            <span class="badge-skill">Scikit-learn</span>
+                            <span class="badge-skill">Pandas</span>
+                            <span class="badge-missing">PyTorch</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar Activity & Skill Gap -->
+        <div class="col-lg-4">
+            <div class="glass-card p-4 mb-4">
+                <h5 class="fw-bold text-white mb-3"><i class="fa-solid fa-chart-pie text-success me-2"></i> Skill Gap Summary</h5>
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between text-white-50 small mb-1">
+                        <span>Python Backend Profile</span>
+                        <span class="text-success fw-bold">85%</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill bg-success" style="width: 85%;"></div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between text-white-50 small mb-1">
+                        <span>DevOps & Containerization</span>
+                        <span class="text-warning fw-bold">60%</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill bg-warning" style="width: 60%;"></div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between text-white-50 small mb-1">
+                        <span>Cloud & Microservices</span>
+                        <span class="text-danger fw-bold">40%</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill bg-warning" style="width: 40%; background-color: #ef4444;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card p-4">
+                <h5 class="fw-bold text-white mb-3"><i class="fa-solid fa-clock-rotate-left me-2"></i> Platform Activity</h5>
+                <ul class="list-unstyled text-white-50 small mb-0">
+                    <li class="mb-2 pb-2 border-bottom border-secondary opacity-75 d-flex align-items-center gap-2">
+                        <i class="fa-solid fa-circle-check text-success"></i> ATS Audit generated score 85.6
+                    </li>
+                    <li class="mb-2 pb-2 border-bottom border-secondary opacity-75 d-flex align-items-center gap-2">
+                        <i class="fa-solid fa-robot text-primary"></i> Chatbot query: Python roadmaps
+                    </li>
+                    <li class="mb-0 d-flex align-items-center gap-2">
+                        <i class="fa-solid fa-briefcase text-warning"></i> 5 new job matches identified
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

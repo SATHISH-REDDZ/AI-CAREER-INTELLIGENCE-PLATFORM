@@ -16,50 +16,39 @@ from utils.jwt_helper import decode_token
 
 def login_required(func):
     """
-    JWT Authentication Decorator.
+    JWT Authentication & Session Decorator.
     """
 
     @wraps(func)
     def wrapper(*args, **kwargs):
+        from flask import session
 
         auth_header = request.headers.get("Authorization")
+        user = None
 
-        if not auth_header:
-            return jsonify({
-                "success": False,
-                "message": "Authorization token is missing."
-            }), 401
+        if auth_header and auth_header.startswith("Bearer "):
+            token = auth_header.split(" ")[1]
+            payload = decode_token(token)
+            if payload:
+                user = db.session.get(User, payload["user_id"])
 
-        if not auth_header.startswith("Bearer "):
-            return jsonify({
-                "success": False,
-                "message": "Invalid authorization header."
-            }), 401
-
-        token = auth_header.split(" ")[1]
-
-        payload = decode_token(token)
-
-        if payload is None:
-            return jsonify({
-                "success": False,
-                "message": "Invalid or expired token."
-            }), 401
-
-        user = db.session.get(User, payload["user_id"])
+        if user is None and session.get("user_id"):
+            user = db.session.get(User, session.get("user_id"))
 
         if user is None:
             return jsonify({
                 "success": False,
-                "message": "User not found."
-            }), 404
+                "message": "Authorization token or active login session is required."
+            }), 401
 
         g.user_id = user.id
         g.current_user = user
 
+
         return func(*args, **kwargs)
 
     return wrapper
+
 
 
 def roles_required(*roles):

@@ -1,7 +1,57 @@
 {% extends "base.html" %}
-{% block title %}Resume & Chat History{% endblock %}
+{% block title %}Conversation History — AI Career Intelligence Platform{% endblock %}
+
 {% block content %}
-<div class="py-4">
-    <h2>Activity & Session History</h2>
+<div class="row g-4">
+    <div class="col-12">
+        <div class="glass-card p-4 d-flex justify-content-between align-items-center">
+            <div>
+                <h3 class="fw-bold text-white mb-1"><i class="fa-solid fa-clock-rotate-left text-success me-2"></i> Conversation & Analysis History</h3>
+                <p class="text-white-50 mb-0">Saved AI advisor chatbot sessions, ATS resume scans, and mock interview evaluations.</p>
+            </div>
+            <a href="/chatbot" class="btn btn-brand btn-sm"><i class="fa-solid fa-plus me-1"></i> New Session</a>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div class="glass-card p-4">
+            <div class="table-responsive">
+                <table class="table table-dark table-hover align-middle mb-0">
+                    <thead>
+                        <tr class="text-white-50 small">
+                            <th>TYPE</th>
+                            <th>SUMMARY / QUERY</th>
+                            <th>DATE</th>
+                            <th>SCORE / STATUS</th>
+                            <th class="text-end">ACTION</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="badge bg-success">ATS Audit</span></td>
+                            <td>Resume Audit for Python Backend Engineer</td>
+                            <td class="text-white-50 small">Today, 14:32</td>
+                            <td><span class="fw-bold text-success">85.6 / 100</span></td>
+                            <td class="text-end"><a href="/ats" class="btn btn-outline-glass btn-sm">View Report</a></td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge bg-primary">AI Chat</span></td>
+                            <td>"How can I transition to Machine Learning Engineering?"</td>
+                            <td class="text-white-50 small">Yesterday, 18:10</td>
+                            <td><span class="badge bg-secondary">Completed</span></td>
+                            <td class="text-end"><a href="/chatbot" class="btn btn-outline-glass btn-sm">Open Chat</a></td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge bg-purple" style="background:#a855f7;">Mock Interview</span></td>
+                            <td>Python asyncio & REST API System Design</td>
+                            <td class="text-white-50 small">2 days ago</td>
+                            <td><span class="fw-bold text-success">80 / 100</span></td>
+                            <td class="text-end"><a href="/interview" class="btn btn-outline-glass btn-sm">View Score</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

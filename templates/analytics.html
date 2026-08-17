@@ -1,7 +1,119 @@
 {% extends "base.html" %}
-{% block title %}Analytics{% endblock %}
+{% block title %}Analytics & Job Market Trends — AI Career Intelligence Platform{% endblock %}
+
 {% block content %}
-<div class="py-4">
-    <h2>Career Growth Metrics</h2>
+<div class="row g-4">
+    <div class="col-12">
+        <div class="glass-card p-4 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+            <div>
+                <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-1 mb-2">
+                    <i class="fa-solid fa-chart-column me-1"></i> System Intelligence Analytics
+                </span>
+                <h3 class="fw-bold text-white mb-1">Career & Job Market Analytics</h3>
+                <p class="text-white-50 mb-0">Platform activity trends, skill demand distribution, average ATS performance & job matching metrics.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="glass-card p-4 text-center h-100">
+            <div class="text-success fs-1 mb-2"><i class="fa-solid fa-users"></i></div>
+            <h3 class="fw-bold text-white mb-0">1,248</h3>
+            <span class="text-white-50 small">Active Candidates</span>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="glass-card p-4 text-center h-100">
+            <div class="text-primary fs-1 mb-2"><i class="fa-solid fa-file-arrow-up"></i></div>
+            <h3 class="fw-bold text-white mb-0">3,890</h3>
+            <span class="text-white-50 small">Resumes Processed</span>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="glass-card p-4 text-center h-100">
+            <div class="text-warning fs-1 mb-2"><i class="fa-solid fa-gauge-high"></i></div>
+            <h3 class="fw-bold text-white mb-0">78.5%</h3>
+            <span class="text-white-50 small">Average ATS Score</span>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="glass-card p-4 text-center h-100">
+            <div class="text-info fs-1 mb-2"><i class="fa-solid fa-robot"></i></div>
+            <h3 class="fw-bold text-white mb-0">12,450</h3>
+            <span class="text-white-50 small">AI Chat Conversations</span>
+        </div>
+    </div>
+
+    <!-- Charts / Breakdown -->
+    <div class="col-md-6">
+        <div class="glass-card p-4 h-100">
+            <h5 class="fw-bold text-white mb-3"><i class="fa-solid fa-fire text-danger me-2"></i> Most Demanded Tech Skills (2026)</h5>
+            <div class="mb-3">
+                <div class="d-flex justify-content-between text-white-50 small mb-1">
+                    <span>Python</span>
+                    <span class="text-success fw-bold">94%</span>
+                </div>
+                <div class="progress" style="height: 8px; background: rgba(255,255,255,0.1);">
+                    <div class="progress-bar bg-success" style="width: 94%;"></div>
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="d-flex justify-content-between text-white-50 small mb-1">
+                    <span>Docker & Kubernetes</span>
+                    <span class="text-primary fw-bold">88%</span>
+                </div>
+                <div class="progress" style="height: 8px; background: rgba(255,255,255,0.1);">
+                    <div class="progress-bar bg-primary" style="width: 88%;"></div>
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="d-flex justify-content-between text-white-50 small mb-1">
+                    <span>SQL & PostgreSQL</span>
+                    <span class="text-info fw-bold">82%</span>
+                </div>
+                <div class="progress" style="height: 8px; background: rgba(255,255,255,0.1);">
+                    <div class="progress-bar bg-info" style="width: 82%;"></div>
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="d-flex justify-content-between text-white-50 small mb-1">
+                    <span>Generative AI & LangChain</span>
+                    <span class="text-purple fw-bold" style="color: #a855f7;">76%</span>
+                </div>
+                <div class="progress" style="height: 8px; background: rgba(255,255,255,0.1);">
+                    <div class="progress-bar bg-purple" style="width: 76%; background: #a855f7;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="glass-card p-4 h-100">
+            <h5 class="fw-bold text-white mb-3"><i class="fa-solid fa-magnifying-glass-chart text-warning me-2"></i> Top Job Role Matches</h5>
+            <ul class="list-group list-group-flush bg-transparent text-white">
+                <li class="list-group-item bg-transparent text-white border-secondary d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="fw-bold">Python Backend Software Engineer</span>
+                        <div class="text-white-50 small">35% candidate target share</div>
+                    </div>
+                    <span class="badge bg-success">Highest Match</span>
+                </li>
+                <li class="list-group-item bg-transparent text-white border-secondary d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="fw-bold">Machine Learning Engineer</span>
+                        <div class="text-white-50 small">28% candidate target share</div>
+                    </div>
+                    <span class="badge bg-primary">High Growth</span>
+                </li>
+                <li class="list-group-item bg-transparent text-white border-secondary d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="fw-bold">Data Analyst</span>
+                        <div class="text-white-50 small">20% candidate target share</div>
+                    </div>
+                    <span class="badge bg-info">Popular Entry</span>
+                </li>
+            </ul>
+        </div>
+    </div>
 </div>
 {% endblock %}

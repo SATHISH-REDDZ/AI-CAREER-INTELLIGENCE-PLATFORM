@@ -43,11 +43,8 @@ def create_app() -> Flask:
     # Initialize database
     initialize_database(app)
 
-    # Register application routes
-    from app.routes import register_routes
-    register_routes(app)
-
-    # Register API Blueprints
+    # Register Web & API Blueprints
+    from app.routes import web_bp
     from routes.auth_routes import auth_bp
     from routes.user_routes import user_bp
     from routes.admin_routes import admin_bp
@@ -57,7 +54,13 @@ def create_app() -> Flask:
     from routes.cover_letter_routes import cover_letter_bp
     from routes.roadmap_routes import roadmap_bp
     from routes.chatbot_routes import chatbot_bp
+    from routes.job_routes import job_bp
+    from routes.skill_routes import skill_bp
+    from routes.career_routes import career_bp
+    from routes.report_routes import report_bp
+    from routes.notification_routes import notification_bp
 
+    app.register_blueprint(web_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(user_bp)
     app.register_blueprint(admin_bp)
@@ -67,6 +70,13 @@ def create_app() -> Flask:
     app.register_blueprint(cover_letter_bp)
     app.register_blueprint(roadmap_bp)
     app.register_blueprint(chatbot_bp)
+    app.register_blueprint(job_bp)
+    app.register_blueprint(skill_bp)
+    app.register_blueprint(career_bp)
+    app.register_blueprint(report_bp)
+    app.register_blueprint(notification_bp)
 
     # Return the configured application
     return app
+
+
