@@ -3,11 +3,8 @@
 > **An AI-powered career intelligence platform that analyzes resumes, evaluates career readiness, identifies skill gaps, predicts suitable career paths, calculates ATS compatibility, generates personalized career recommendations, and provides intelligent career assistance.**
 
 [![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/)
-
 [![Flask Framework](https://img.shields.io/badge/framework-Flask-black.svg)](https://flask.palletsprojects.com/)
-
 [![GenAI SDK](https://img.shields.io/badge/AI-Google_GenAI_SDK-orange.svg)](https://pypi.org/project/google-genai/)
-
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ---
