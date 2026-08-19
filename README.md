@@ -3,11 +3,35 @@
 > **An AI-powered career intelligence platform that analyzes resumes, evaluates career readiness, identifies skill gaps, predicts suitable career paths, calculates ATS compatibility, generates personalized career recommendations, and provides intelligent career assistance.**
 
 [![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/)
+
 [![Flask Framework](https://img.shields.io/badge/framework-Flask-black.svg)](https://flask.palletsprojects.com/)
+
 [![GenAI SDK](https://img.shields.io/badge/AI-Google_GenAI_SDK-orange.svg)](https://pypi.org/project/google-genai/)
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ---
+## 🌐 Application Links
+
+When running locally (`python run.py`), access the platform pages directly at:
+
+| Page | Local URL |
+|------|-----------|
+| 🤖 **Main App & AI Chatbot** | [http://localhost:5001/](http://localhost:5001/) |
+| 📊 **Dashboard** | [http://localhost:5001/dashboard](http://localhost:5001/dashboard) |
+| 📄 **ATS Resume Analysis** | [http://localhost:5001/ats](http://localhost:5001/ats) |
+| 📤 **Upload Resume** | [http://localhost:5001/upload-resume](http://localhost:5001/upload-resume) |
+| 🎤 **AI Interview Practice** | [http://localhost:5001/interview](http://localhost:5001/interview) |
+| 🗺️ **Career Roadmap** | [http://localhost:5001/roadmap](http://localhost:5001/roadmap) |
+| ✍️ **Cover Letter Generator** | [http://localhost:5001/cover-letter](http://localhost:5001/cover-letter) |
+| 💼 **Jobs** | [http://localhost:5001/jobs](http://localhost:5001/jobs) |
+| 📈 **Analytics** | [http://localhost:5001/analytics](http://localhost:5001/analytics) |
+| 👤 **Profile** | [http://localhost:5001/profile](http://localhost:5001/profile) |
+| 📜 **History** | [http://localhost:5001/history](http://localhost:5001/history) |
+| 📊 **Reports** | [http://localhost:5001/reports](http://localhost:5001/reports) |
+| ⚙️ **Settings** | [http://localhost:5001/settings](http://localhost:5001/settings) |
+| 🔐 **Login / Register** | [http://localhost:5001/login](http://localhost:5001/login) \| [http://localhost:5001/register](http://localhost:5001/register) |
+
 
 ## 📌 Project Overview
 
