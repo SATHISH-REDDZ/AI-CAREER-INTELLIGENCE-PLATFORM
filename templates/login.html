@@ -6,7 +6,8 @@
     <div style="max-width: 480px; width: 100%;">
         <div class="glass-card p-4 p-md-5">
             <div class="text-center mb-4">
-                <div style="width: 54px; height: 54px; background: linear-gradient(135deg, #10b981, #3b82f6); border-radius: 14px;" class="d-inline-flex align-items-center justify-content-center mb-3">
+                <div style="width: 54px; height: 54px; background: linear-gradient(135deg, #10b981, #3b82f6); border-radius: 14px;"
+                    class="d-inline-flex align-items-center justify-content-center mb-3">
                     <i class="fa-solid fa-user-lock text-white fs-3"></i>
                 </div>
                 <h3 class="fw-bold text-white mb-1">Welcome Back</h3>
@@ -16,7 +17,8 @@
             <form id="loginForm" onsubmit="handleLogin(event)">
                 <div class="form-group mb-3">
                     <label class="form-label">Email Address</label>
-                    <input type="email" id="email" class="form-control" placeholder="name@example.com" required value="alex.johnson@example.com">
+                    <input type="email" id="email" class="form-control" placeholder="name@example.com" required
+                        value="alex.johnson@example.com">
                 </div>
 
                 <div class="form-group mb-3">
@@ -24,7 +26,8 @@
                         <label class="form-label">Password</label>
                         <a href="#" class="text-success small text-decoration-none">Forgot?</a>
                     </div>
-                    <input type="password" id="password" class="form-control" placeholder="••••••••" required value="user123">
+                    <input type="password" id="password" class="form-control" placeholder="••••••••" required
+                        value="user123">
                 </div>
 
                 <div id="loginAlert" class="alert alert-danger d-none py-2 small mb-3"></div>
@@ -34,8 +37,10 @@
                 </button>
             </form>
 
-            <div class="p-3 rounded-3 mt-3" style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.2);">
-                <div class="fw-bold text-success small mb-1"><i class="fa-solid fa-lightbulb me-1"></i> Quick Demo Accounts</div>
+            <div class="p-3 rounded-3 mt-3"
+                style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.2);">
+                <div class="fw-bold text-success small mb-1"><i class="fa-solid fa-lightbulb me-1"></i> Quick Demo
+                    Accounts</div>
                 <div class="text-white-50 small">
                     <strong>User:</strong> alex.johnson@example.com / <code>user123</code><br>
                     <strong>Admin:</strong> admin@careerai.com / <code>admin123</code>
@@ -51,32 +56,32 @@
 </div>
 
 <script>
-async function handleLogin(e) {
-    e.preventDefault();
-    const alertBox = document.getElementById("loginAlert");
-    alertBox.classList.add("d-none");
-    
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
+    async function handleLogin(e) {
+        e.preventDefault();
+        const alertBox = document.getElementById("loginAlert");
+        alertBox.classList.add("d-none");
 
-    try {
-        const res = await fetch("/api/auth/login", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, password })
-        });
-        const data = await res.json();
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
 
-        if (res.ok && data.success) {
-            window.location.href = "/dashboard";
-        } else {
-            alertBox.innerText = data.message || "Invalid credentials provided.";
+        try {
+            const res = await fetch("/api/auth/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password })
+            });
+            const data = await res.json();
+
+            if (res.ok && data.success) {
+                window.location.href = "/dashboard";
+            } else {
+                alertBox.innerText = data.message || "Invalid credentials provided.";
+                alertBox.classList.remove("d-none");
+            }
+        } catch (err) {
+            alertBox.innerText = "Network error. Please try again.";
             alertBox.classList.remove("d-none");
         }
-    } catch (err) {
-        alertBox.innerText = "Network error. Please try again.";
-        alertBox.classList.remove("d-none");
     }
-}
 </script>
 {% endblock %}

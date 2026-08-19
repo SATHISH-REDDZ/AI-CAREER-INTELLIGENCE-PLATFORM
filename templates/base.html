@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}AI Career Intelligence Platform{% endblock %}</title>
-    
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,23 +14,27 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Bootstrap 5.3 CSS -->
     <link href="https://cdn.jsdelivr.com/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
+
     <!-- Custom Design System CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
     <style>
         /* Fallback Core CSS to ensure bullet points and unstyled elements NEVER appear */
-        ul.navbar-nav, ul.list-unstyled, ul {
+        ul.navbar-nav,
+        ul.list-unstyled,
+        ul {
             list-style: none !important;
             margin: 0;
             padding: 0;
         }
+
         .navbar-nav {
             display: flex !important;
             flex-direction: row !important;
             align-items: center !important;
             gap: 0.75rem !important;
         }
+
         .nav-link {
             text-decoration: none !important;
             color: #b4b4b4 !important;
@@ -39,6 +44,7 @@
             border-radius: 6px !important;
             transition: all 0.15s ease !important;
         }
+
         .nav-link:hover {
             color: #ffffff !important;
             background: rgba(255, 255, 255, 0.08) !important;
@@ -46,9 +52,10 @@
     </style>
     {% block extra_css %}{% endblock %}
 </head>
+
 <body>
     {% include 'navbar.html' %}
-    
+
     <main class="container py-4">
         {% block content %}{% endblock %}
     </main>
@@ -59,4 +66,5 @@
     <script src="https://cdn.jsdelivr.com/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     {% block extra_js %}{% endblock %}
 </body>
+
 </html>
